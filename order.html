@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Place an order — Stocklist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root{
+    --ink:#141b22; --ink-soft:#1c2530; --paper:#f2ede1; --orange:#e0590c;
+    --green:#4c7a3d; --stamp-red:#a8362a; --muted:#8b93a0; --line:#33404d;
+    --display:'Oswald',sans-serif; --body:'IBM Plex Sans',sans-serif; --mono:'IBM Plex Mono',monospace;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{background:var(--ink); color:var(--paper); font-family:var(--body); min-height:100vh;}
+  a{color:inherit;}
+  .wrap{max-width:720px; margin:0 auto; padding:60px 24px 100px;}
+  h1,h2{font-family:var(--display); font-weight:600; text-transform:uppercase; letter-spacing:0.01em;}
+  .backlink{font-family:var(--mono); font-size:13px; color:var(--muted); text-decoration:none; display:inline-block; margin-bottom:30px;}
+  .backlink:hover{color:var(--paper);}
+  .eyebrow{font-family:var(--mono); font-size:12.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--orange); display:flex; align-items:center; gap:10px; margin-bottom:14px;}
+  .eyebrow::before{content:""; width:22px; height:1px; background:var(--orange);}
+  h1{font-size:clamp(28px,5vw,42px); margin-bottom:14px;}
+  .lead{color:#c9cdd4; font-size:15px; line-height:1.6; margin-bottom:40px; max-width:520px;}
+
+  .panel{background:var(--paper); color:var(--ink); border-radius:3px; padding:40px; }
+  @media (max-width:560px){.panel{padding:28px 22px;}}
+  label{font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:#6a6f76; margin-bottom:6px; display:block;}
+  input, select, textarea{width:100%; padding:12px 14px; border:1px solid #cfc6ab; border-radius:2px; background:#fbf9f2; font-family:var(--body); font-size:14.5px; color:var(--ink);}
+  textarea{min-height:110px; resize:vertical; font-family:var(--body);}
+  input:focus, select:focus, textarea:focus{outline:2px solid var(--orange); outline-offset:1px; border-color:var(--orange);}
+  form{display:flex; flex-direction:column; gap:16px;}
+  .field-row{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  @media (max-width:520px){.field-row{grid-template-columns:1fr;}}
+  .submit-btn{margin-top:6px; font-family:var(--mono); font-weight:600; font-size:14px; background:var(--ink); color:var(--paper); border:none; padding:15px 24px; border-radius:2px; cursor:pointer; letter-spacing:0.02em;}
+  .submit-btn:hover{background:var(--ink-soft);}
+  .submit-btn:disabled{opacity:0.5; cursor:not-allowed;}
+  .form-note{font-family:var(--mono); font-size:11.5px; color:#8a8f96;}
+
+  .result{display:none; background:var(--paper); color:var(--ink); border-radius:3px; padding:40px; text-align:center;}
+  .result .stamp-label{font-family:var(--mono); font-size:12px; letter-spacing:0.1em; text-transform:uppercase; color:var(--stamp-red); margin-bottom:10px;}
+  .code{font-family:var(--display); font-size:44px; letter-spacing:0.04em; color:var(--ink); border:2px dashed var(--stamp-red); display:inline-block; padding:14px 26px; margin:14px 0 22px; border-radius:2px;}
+  .result p{font-size:14px; color:#5a5f66; line-height:1.6; max-width:400px; margin:0 auto 22px;}
+  .result a.track-link{display:inline-block; font-family:var(--mono); font-size:13.5px; background:var(--orange); color:var(--ink); padding:12px 22px; border-radius:2px; text-decoration:none; font-weight:600;}
+  .error{display:none; background:#3a2420; border:1px solid var(--stamp-red); color:#e8bcb4; padding:16px 18px; border-radius:2px; font-size:13.5px; margin-top:14px; font-family:var(--mono);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="backlink" href="stocklist.html">← Back to Stocklist</a>
+  <div class="eyebrow">Place an order</div>
+  <h1>What does your business need?</h1>
+  <p class="lead">Fill this in once. You'll get a tracking code to check the status of this order any time.</p>
+
+  <form id="orderForm" class="panel">
+    <div class="field-row">
+      <div><label for="bizname">Business name</label><input id="bizname" type="text" placeholder="Riverside Guesthouse" required></div>
+      <div><label for="biztype">Business type</label>
+        <select id="biztype" required>
+          <option value="" disabled selected>Select one</option>
+          <option>Airbnb / guesthouse</option>
+          <option>Salon / barber</option>
+          <option>Restaurant / café</option>
+          <option>Office</option>
+          <option>Construction site</option>
+          <option>Other</option>
+        </select>
+      </div>
+    </div>
+    <div class="field-row">
+      <div><label for="city">City</label><input id="city" type="text" placeholder="Pretoria" required></div>
+      <div><label for="contact">WhatsApp or email</label><input id="contact" type="text" placeholder="082 000 0000" required></div>
+    </div>
+    <div>
+      <label for="items">What do you need? (item and quantity, one per line)</label>
+      <textarea id="items" placeholder="4x toilet paper packs&#10;2x hand soap refills&#10;1 roll bin bags" required></textarea>
+    </div>
+    <button type="submit" class="submit-btn" id="submitBtn">Place order →</button>
+    <p class="form-note">This creates a real order record with a tracking code — no payment is taken yet.</p>
+    <div class="error" id="errorBox"></div>
+  </form>
+
+  <div class="result" id="resultBox">
+    <div class="stamp-label">Order confirmed</div>
+    <h2 style="font-size:20px;">Your tracking code</h2>
+    <div class="code" id="codeDisplay"></div>
+    <p>Save this code — you'll need it to check your order's status. Suppliers will use it to find and fulfil your order.</p>
+    <a class="track-link" id="trackLink" href="#">Track this order →</a>
+  </div>
+</div>
+
+<script>
+  const SUPABASE_URL = "https://edmlbvaoxngyryuwkirq.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_vzdFDXM-79Jylf-pZH1GDA_abjMIgl0";
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  function makeTrackingCode(){
+    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    let code = "SL-";
+    for(let i=0;i<6;i++){ code += chars[Math.floor(Math.random()*chars.length)]; }
+    return code;
+  }
+
+  const form = document.getElementById('orderForm');
+  const resultBox = document.getElementById('resultBox');
+  const errorBox = document.getElementById('errorBox');
+  const submitBtn = document.getElementById('submitBtn');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorBox.style.display = 'none';
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Placing order…';
+
+    const trackingCode = makeTrackingCode();
+    const payload = {
+      tracking_code: trackingCode,
+      business_name: document.getElementById('bizname').value.trim(),
+      business_type: document.getElementById('biztype').value,
+      city: document.getElementById('city').value.trim(),
+      contact: document.getElementById('contact').value.trim(),
+      items: document.getElementById('items').value.trim(),
+      status: 'pending'
+    };
+
+    const { error } = await supabase.from('orders').insert(payload);
+
+    if(error){
+      errorBox.textContent = "Couldn't place your order: " + error.message;
+      errorBox.style.display = 'block';
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Place order →';
+      return;
+    }
+
+    form.style.display = 'none';
+    document.getElementById('codeDisplay').textContent = trackingCode;
+    document.getElementById('trackLink').href = 'track.html?code=' + trackingCode;
+    resultBox.style.display = 'block';
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Log in — Stocklist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap topbar-inner">
+    <a href="index.html" class="brand"><span class="dot"></span>Stocklist</a>
+    <div class="nav" id="topbar-nav"></div>
+  </div>
+</div>
+
+<div class="wrap page-head">
+  <div class="crumbs"><a href="index.html">Stocklist</a> / Log in</div>
+  <h1>Welcome back.</h1>
+</div>
+
+<div class="wrap">
+  <section style="max-width:460px;">
+
+    <div class="panel" style="display:flex; gap:8px; margin-bottom:18px; padding:6px;">
+      <button class="btn small" id="tab-business" style="flex:1;">Business</button>
+      <button class="btn secondary small" id="tab-supplier" style="flex:1;">Supplier</button>
+    </div>
+
+    <form id="form-business" class="panel">
+      <div class="field">
+        <label for="b-contact">WhatsApp number or email</label>
+        <input id="b-contact" required>
+      </div>
+      <div class="field">
+        <label for="b-password">Password</label>
+        <input id="b-password" type="password" required>
+      </div>
+      <button class="btn block" type="submit">Log in →</button>
+      <div class="error-text" id="b-error"></div>
+      <p class="field-hint" style="margin-top:14px;">No account yet? <a href="signup.html" style="color:var(--amber);">Create one</a></p>
+    </form>
+
+    <form id="form-supplier" class="panel" style="display:none;">
+      <div class="field">
+        <label for="s-contact">WhatsApp number or email</label>
+        <input id="s-contact" required>
+      </div>
+      <div class="field">
+        <label for="s-password">Password</label>
+        <input id="s-password" type="password" required>
+      </div>
+      <button class="btn block" type="submit">Log in →</button>
+      <div class="error-text" id="s-error"></div>
+      <p class="field-hint" style="margin-top:14px;">No account yet? <a href="signup.html" style="color:var(--amber);">Create one</a></p>
+    </form>
+
+  </section>
+</div>
+
+<footer>
+  <div class="wrap">
+    <span class="stencil">Stocklist</span>
+  </div>
+</footer>
+
+<script src="assets/db.js"></script>
+<script src="assets/nav.js"></script>
+<script>
+  const tabBusiness = document.getElementById("tab-business");
+  const tabSupplier = document.getElementById("tab-supplier");
+  const formBusiness = document.getElementById("form-business");
+  const formSupplier = document.getElementById("form-supplier");
+
+  tabBusiness.addEventListener("click", () => {
+    formBusiness.style.display = "block"; formSupplier.style.display = "none";
+    tabBusiness.classList.remove("secondary"); tabSupplier.classList.add("secondary");
+  });
+  tabSupplier.addEventListener("click", () => {
+    formSupplier.style.display = "block"; formBusiness.style.display = "none";
+    tabSupplier.classList.remove("secondary"); tabBusiness.classList.add("secondary");
+  });
+
+  formBusiness.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const errEl = document.getElementById("b-error");
+    errEl.classList.remove("show");
+    try {
+      StocklistDB.loginBusiness(document.getElementById("b-contact").value.trim(), document.getElementById("b-password").value);
+      window.location.href = "dashboard.html";
+    } catch (err) {
+      errEl.textContent = err.message; errEl.classList.add("show");
+    }
+  });
+
+  formSupplier.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const errEl = document.getElementById("s-error");
+    errEl.classList.remove("show");
+    try {
+      StocklistDB.loginSupplier(document.getElementById("s-contact").value.trim(), document.getElementById("s-password").value);
+      window.location.href = "supplier-dashboard.html";
+    } catch (err) {
+      errEl.textContent = err.message; errEl.classList.add("show");
+    }
+  });
+</script>
+</body>
+</html>

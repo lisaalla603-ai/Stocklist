@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create an account — Stocklist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap topbar-inner">
+    <a href="index.html" class="brand"><span class="dot"></span>Stocklist</a>
+    <div class="nav" id="topbar-nav"></div>
+  </div>
+</div>
+
+<div class="wrap page-head">
+  <div class="crumbs"><a href="index.html">Stocklist</a> / Create account</div>
+  <h1>Set up your account.</h1>
+  <p>One account per business or supplier. No card needed to join — Stocklist earns commission from suppliers per order.</p>
+</div>
+
+<div class="wrap">
+  <section style="max-width:520px;">
+
+    <div class="panel" style="display:flex; gap:8px; margin-bottom:18px; padding:6px;">
+      <button class="btn small" id="tab-business" style="flex:1;">I'm a business</button>
+      <button class="btn secondary small" id="tab-supplier" style="flex:1;">I'm a supplier</button>
+    </div>
+
+    <!-- BUSINESS SIGNUP -->
+    <form id="form-business" class="panel">
+      <div class="panel-head"><span class="panel-title">Business account</span><span class="stencil">BIN / NEW-01</span></div>
+      <div class="field">
+        <label for="b-name">Business name</label>
+        <input id="b-name" required placeholder="Riverside Guesthouse">
+      </div>
+      <div class="field">
+        <label for="b-type">Business type</label>
+        <select id="b-type" required>
+          <option value="">Select one</option>
+          <option>Airbnb / guesthouse</option>
+          <option>Salon / barber</option>
+          <option>Restaurant / café</option>
+          <option>Office</option>
+          <option>Construction site</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="b-city">City</label>
+        <input id="b-city" required placeholder="Pretoria">
+      </div>
+      <div class="field">
+        <label for="b-contact">WhatsApp number or email</label>
+        <input id="b-contact" required placeholder="082 123 4567">
+      </div>
+      <div class="field">
+        <label for="b-password">Password</label>
+        <input id="b-password" type="password" required minlength="4">
+      </div>
+      <button class="btn block" type="submit">Create business account →</button>
+      <div class="error-text" id="b-error"></div>
+      <p class="field-hint" style="margin-top:14px;">Already have an account? <a href="login.html" style="color:var(--amber);">Log in</a></p>
+    </form>
+
+    <!-- SUPPLIER SIGNUP -->
+    <form id="form-supplier" class="panel" style="display:none;">
+      <div class="panel-head"><span class="panel-title">Supplier account</span><span class="stencil">BIN / SUP-01</span></div>
+      <div class="field">
+        <label for="s-name">Supplier / company name</label>
+        <input id="s-name" required placeholder="Delta Hygiene Supplies">
+      </div>
+      <div class="field">
+        <label>Categories you supply</label>
+        <div class="stack" style="gap:8px; font-size:.9rem;">
+          <label style="display:flex; gap:8px; align-items:center; font-family:inherit; text-transform:none; letter-spacing:0; color:var(--paper);"><input type="checkbox" value="Airbnb / guesthouse" style="width:auto;"> Airbnb / guesthouse</label>
+          <label style="display:flex; gap:8px; align-items:center; font-family:inherit; text-transform:none; letter-spacing:0; color:var(--paper);"><input type="checkbox" value="Salon / barber" style="width:auto;"> Salon / barber</label>
+          <label style="display:flex; gap:8px; align-items:center; font-family:inherit; text-transform:none; letter-spacing:0; color:var(--paper);"><input type="checkbox" value="Restaurant / café" style="width:auto;"> Restaurant / café</label>
+          <label style="display:flex; gap:8px; align-items:center; font-family:inherit; text-transform:none; letter-spacing:0; color:var(--paper);"><input type="checkbox" value="Office" style="width:auto;"> Office</label>
+          <label style="display:flex; gap:8px; align-items:center; font-family:inherit; text-transform:none; letter-spacing:0; color:var(--paper);"><input type="checkbox" value="Construction site" style="width:auto;"> Construction site</label>
+        </div>
+      </div>
+      <div class="field">
+        <label for="s-city">City</label>
+        <input id="s-city" required placeholder="Pretoria">
+      </div>
+      <div class="field">
+        <label for="s-contact">WhatsApp number or email</label>
+        <input id="s-contact" required placeholder="082 123 4567">
+      </div>
+      <div class="field">
+        <label for="s-password">Password</label>
+        <input id="s-password" type="password" required minlength="4">
+      </div>
+      <button class="btn block" type="submit">Create supplier account →</button>
+      <div class="error-text" id="s-error"></div>
+      <p class="field-hint" style="margin-top:14px;">Already have an account? <a href="login.html" style="color:var(--amber);">Log in</a></p>
+    </form>
+
+  </section>
+</div>
+
+<footer>
+  <div class="wrap">
+    <span class="stencil">Stocklist</span>
+    <p class="muted" style="margin:0; font-size:.85rem;">Concept preview. Free for businesses to join — Stocklist earns a small commission from suppliers on each completed order.</p>
+  </div>
+</footer>
+
+<script src="assets/db.js"></script>
+<script src="assets/nav.js"></script>
+<script>
+  const tabBusiness = document.getElementById("tab-business");
+  const tabSupplier = document.getElementById("tab-supplier");
+  const formBusiness = document.getElementById("form-business");
+  const formSupplier = document.getElementById("form-supplier");
+
+  tabBusiness.addEventListener("click", () => {
+    formBusiness.style.display = "block";
+    formSupplier.style.display = "none";
+    tabBusiness.classList.remove("secondary");
+    tabSupplier.classList.add("secondary");
+  });
+  tabSupplier.addEventListener("click", () => {
+    formSupplier.style.display = "block";
+    formBusiness.style.display = "none";
+    tabSupplier.classList.remove("secondary");
+    tabBusiness.classList.add("secondary");
+  });
+
+  formBusiness.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const errEl = document.getElementById("b-error");
+    errEl.classList.remove("show");
+    try {
+      StocklistDB.signupBusiness({
+        businessName: document.getElementById("b-name").value.trim(),
+        businessType: document.getElementById("b-type").value,
+        city: document.getElementById("b-city").value.trim(),
+        contact: document.getElementById("b-contact").value.trim(),
+        password: document.getElementById("b-password").value,
+      });
+      window.location.href = "dashboard.html";
+    } catch (err) {
+      errEl.textContent = err.message;
+      errEl.classList.add("show");
+    }
+  });
+
+  formSupplier.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const errEl = document.getElementById("s-error");
+    errEl.classList.remove("show");
+    const categories = Array.from(document.querySelectorAll('#form-supplier input[type="checkbox"]:checked')).map((c) => c.value);
+    if (categories.length === 0) {
+      errEl.textContent = "Select at least one category you supply.";
+      errEl.classList.add("show");
+      return;
+    }
+    try {
+      StocklistDB.signupSupplier({
+        supplierName: document.getElementById("s-name").value.trim(),
+        city: document.getElementById("s-city").value.trim(),
+        categories,
+        contact: document.getElementById("s-contact").value.trim(),
+        password: document.getElementById("s-password").value,
+      });
+      window.location.href = "supplier-dashboard.html";
+    } catch (err) {
+      errEl.textContent = err.message;
+      errEl.classList.add("show");
+    }
+  });
+</script>
+</body>
+</html>

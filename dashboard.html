@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — Stocklist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap topbar-inner">
+    <a href="index.html" class="brand"><span class="dot"></span>Stocklist</a>
+    <div class="nav" id="topbar-nav"></div>
+  </div>
+</div>
+
+<div class="wrap page-head">
+  <div class="crumbs"><a href="index.html">Stocklist</a> / Dashboard</div>
+  <h1 id="greeting">Dashboard</h1>
+  <p id="subhead"></p>
+</div>
+
+<div class="wrap">
+  <section class="grid-3" id="stat-row"></section>
+
+  <section>
+    <div class="panel-head" style="margin-bottom:14px;"><span class="panel-title">Recurring orders</span></div>
+    <div id="recurring-list" class="stack" style="gap:12px;"></div>
+  </section>
+
+  <section>
+    <div class="panel-head" style="margin-bottom:14px;">
+      <span class="panel-title">Order history</span>
+      <a href="catalogue.html" class="btn secondary small">New order</a>
+    </div>
+    <div id="order-list" class="stack" style="gap:12px;"></div>
+  </section>
+</div>
+
+<footer>
+  <div class="wrap"><span class="stencil">Stocklist</span></div>
+</footer>
+
+<script src="assets/db.js"></script>
+<script src="assets/nav.js"></script>
+<script>
+  const session = StocklistDB.getSession();
+  if (!session || session.type !== "business") {
+    window.location.href = "login.html";
+  }
+  const biz = StocklistDB.getBusiness(session.id);
+  document.getElementById("greeting").textContent = biz.businessName;
+  document.getElementById("subhead").textContent = biz.city + " · " + biz.businessType;
+
+  const orders = StocklistDB.listOrdersForBusiness(biz.id);
+  const statusLabel = { placed: "Placed", confirmed: "Confirmed", packed: "Packed", out_for_delivery: "Out for delivery", delivered: "Delivered" };
+  const statusClass = { placed: "b-amber", confirmed: "b-amber", packed: "b-amber", out_for_delivery: "b-amber", delivered: "b-green" };
+
+  // ---- stats ----
+  const monthlySpend = orders
+    .filter((o) => { const d = new Date(o.createdAt); const n = new Date(); return d.getMonth() === n.getMonth() && d.getFullYear() === n.getFullYear(); })
+    .reduce((sum, o) => sum + o.total, 0);
+  const totalSpend = orders.reduce((sum, o) => sum + o.total, 0);
+  const upcoming = orders.filter((o) => o.recurrence.enabled).sort((a, b) => new Date(a.recurrence.nextDate) - new Date(b.recurrence.nextDate))[0];
+
+  document.getElementById("stat-row").innerHTML = `
+    <div class="panel stat"><div class="num">R${monthlySpend.toFixed(0)}</div><div class="lbl">Spend this month</div></div>
+    <div class="panel stat"><div class="num">R${totalSpend.toFixed(0)}</div><div class="lbl">Total spend</div></div>
+    <div class="panel stat"><div class="num">${upcoming ? new Date(upcoming.recurrence.nextDate).toLocaleDateString("en-ZA", { day: "2-digit", month: "short" }) : "—"}</div><div class="lbl">Next delivery</div></div>
+  `;
+
+  // ---- recurring orders ----
+  const recurring = orders.filter((o) => o.recurrence.enabled);
+  const recurEl = document.getElementById("recurring-list");
+  if (recurring.length === 0) {
+    recurEl.innerHTML = `<div class="empty-state"><span class="stencil">No recurring orders yet</span>Set one up at checkout to stop reordering manually.</div>`;
+  } else {
+    recurEl.innerHTML = recurring.map((o) => {
+      const supplier = StocklistDB.getSupplier(o.supplierId);
+      return `
+        <div class="panel">
+          <div class="flex-between">
+            <div>
+              <div style="font-weight:700;">${supplier.name}</div>
+              <span class="stencil dim">EVERY ${o.recurrence.intervalDays} DAYS · NEXT ${new Date(o.recurrence.nextDate).toLocaleDateString("en-ZA", { day: "2-digit", month: "short", year: "numeric" })}</span>
+            </div>
+            <div class="flex-between" style="gap:10px;">
+              <span style="font-family:var(--font-display); font-size:1.2rem; font-weight:700;">R${o.total.toFixed(2)}</span>
+              <button class="btn small" data-reorder="${o.id}">Reorder now</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  // ---- order history ----
+  const orderListEl = document.getElementById("order-list");
+  if (orders.length === 0) {
+    orderListEl.innerHTML = `<div class="empty-state"><span class="stencil">No orders yet</span><a href="catalogue.html" style="color:var(--amber);">Place your first order →</a></div>`;
+  } else {
+    orderListEl.innerHTML = orders.map((o) => {
+      const supplier = StocklistDB.getSupplier(o.supplierId);
+      return `
+        <div class="panel">
+          <div class="flex-between">
+            <div>
+              <div style="font-weight:700;">${supplier.name}</div>
+              <span class="stencil dim">${new Date(o.createdAt).toLocaleDateString("en-ZA", { day: "2-digit", month: "short", year: "numeric" })} · ${o.items.length} ITEMS</span>
+            </div>
+            <div class="flex-between" style="gap:10px;">
+              <span class="badge ${statusClass[o.status]}"><span class="pip"></span>${statusLabel[o.status]}</span>
+              <span style="font-family:var(--font-display); font-size:1.1rem; font-weight:700;">R${o.total.toFixed(2)}</span>
+            </div>
+          </div>
+          <div class="flex-between" style="margin-top:12px;">
+            <a href="track.html?order=${o.id}" class="btn secondary small">Track order</a>
+            <button class="btn small" data-reorder="${o.id}">Reorder</button>
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  document.querySelectorAll("[data-reorder]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const newOrder = StocklistDB.reorder(btn.dataset.reorder);
+      window.location.href = "track.html?order=" + newOrder.id;
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Track order — Stocklist</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  .track-hero{padding:10px 0 30px;}
+  .track-search{
+    display:flex;gap:10px;background:var(--paper-raised);border:1px solid var(--line);
+    border-radius:8px;padding:6px;max-width:520px;
+  }
+  .track-search input{flex:1;border:none;background:none;outline:none;padding:10px 12px;font-size:14px;font-family:'IBM Plex Sans';}
+
+  .trail{position:relative;padding-left:32px;margin-top:30px;}
+  .trail::before{content:"";position:absolute;left:9px;top:6px;bottom:6px;width:2px;background:var(--line);}
+  .trail-step{position:relative;padding-bottom:30px;}
+  .trail-step:last-child{padding-bottom:0;}
+  .trail-dot{
+    position:absolute;left:-32px;top:2px;width:20px;height:20px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;
+    background:var(--paper-raised);border:2px solid var(--line);color:var(--ink-soft);
+  }
+  .trail-step.done .trail-dot{background:var(--green);border-color:var(--green);color:#fff;}
+  .trail-step.current .trail-dot{background:var(--amber);border-color:var(--amber);color:#fff;}
+  .trail-step h4{margin:0 0 4px;font-family:'Fraunces',serif;font-size:15.5px;}
+  .trail-step .time{font-size:12px;color:var(--ink-soft);font-family:'IBM Plex Mono',monospace;}
+  .trail-step p{margin:6px 0 0;font-size:13px;color:var(--ink-soft);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <nav class="site-nav" style="border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:20px;">
+    <a class="brand" href="index.html">Stocklist</a>
+    <div class="links">
+      <a href="catalogue.html">Order supplies</a>
+      <a href="index.html#industries">Who it's for</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="login.html">Log in</a>
+    </div>
+    <a class="btn btn-secondary" href="dashboard.html">← Back to dashboard</a>
+  </nav>
+
+  <div class="track-hero">
+    <div class="stamp-tag" style="margin-bottom:14px;">MANIFEST NO. <b>ST-1042</b> &nbsp;·&nbsp; STATUS <b>IN TRANSIT</b></div>
+    <h1 style="font-size:30px;font-weight:600;margin:0 0 10px;">Where's your order?</h1>
+    <p style="color:var(--ink-soft);font-size:14.5px;margin:0 0 20px;">Enter your order number or the WhatsApp/email used to place it.</p>
+    <div class="track-search">
+      <input type="text" placeholder="Order number, e.g. ST-1042" value="ST-1042">
+      <button class="btn btn-primary">Track →</button>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-head"><h3>Order ST-1042</h3><span class="pill warn">IN TRANSIT</span></div>
+      <div class="alert-list">
+        <div class="alert-item"><div><div class="name">Toilet paper, 2-ply ×4</div><div class="sku">Clean Supply Co.</div></div><div class="qty">R160</div></div>
+        <div class="alert-item"><div><div class="name">Hand soap refill ×2</div><div class="sku">Clean Supply Co.</div></div><div class="qty">R90</div></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-weight:600;padding-top:14px;font-size:15px;">
+        <span>Total</span><span class="mono">R250</span>
+      </div>
+      <p style="font-size:12.5px;color:var(--ink-soft);margin-top:16px;">Delivering to: Riverside Guesthouse, Pretoria East</p>
+      <p style="font-size:12.5px;color:var(--ink-soft);margin-top:4px;">Expected delivery: <b style="color:var(--ink);">Friday, 29 August</b></p>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>Delivery trail</h3></div>
+      <div class="trail">
+        <div class="trail-step done">
+          <div class="trail-dot">✓</div>
+          <h4>Order placed</h4>
+          <div class="time">27 Aug, 09:14</div>
+        </div>
+        <div class="trail-step done">
+          <div class="trail-dot">✓</div>
+          <h4>Confirmed by supplier</h4>
+          <div class="time">27 Aug, 10:02</div>
+        </div>
+        <div class="trail-step current">
+          <div class="trail-dot">●</div>
+          <h4>Packed &amp; dispatched</h4>
+          <div class="time">28 Aug, 08:40</div>
+          <p>Clean Supply Co. has handed this order to their driver.</p>
+        </div>
+        <div class="trail-step">
+          <div class="trail-dot">4</div>
+          <h4>Delivered</h4>
+          <div class="time">Expected 29 Aug</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <span>Stocklist · Concept preview</span>
+    <span>Questions about this delivery? <a href="#" style="color:var(--slate);">Contact the supplier</a></span>
+  </footer>
+
+</div>
+</body>
+</html>

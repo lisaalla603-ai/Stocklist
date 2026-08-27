@@ -4,109 +4,80 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Log in — Stocklist</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="style.css">
+<style>
+  .auth-wrap{
+    min-height:calc(100vh - 100px);
+    display:flex;align-items:center;justify-content:center;
+    padding:40px 20px;
+  }
+  .auth-card{
+    background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);
+    padding:36px 34px;max-width:420px;width:100%;box-shadow:var(--shadow);
+  }
+  .auth-card h1{font-size:24px;font-weight:600;margin:14px 0 6px;}
+  .auth-card p.sub{font-size:13.5px;color:var(--ink-soft);margin:0 0 26px;}
+  .field{margin-bottom:16px;}
+  .field label{font-size:12.5px;font-weight:600;display:block;margin-bottom:6px;}
+  .field input{
+    width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:6px;
+    font-family:'IBM Plex Sans';font-size:14px;background:var(--paper);
+  }
+  .role-toggle{display:flex;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-bottom:22px;}
+  .role-toggle span{flex:1;text-align:center;padding:9px;font-size:12.5px;font-weight:600;background:var(--paper-raised);cursor:pointer;}
+  .role-toggle span.active{background:var(--ink);color:var(--paper-raised);}
+  .auth-foot{font-size:13px;color:var(--ink-soft);margin-top:20px;text-align:center;}
+  .auth-foot a{color:var(--slate);font-weight:600;text-decoration:none;}
+  .forgot{font-size:12.5px;text-align:right;margin:-8px 0 18px;}
+  .forgot a{color:var(--slate);text-decoration:none;}
+</style>
 </head>
 <body>
-
-<div class="topbar">
-  <div class="wrap topbar-inner">
-    <a href="index.html" class="brand"><span class="dot"></span>Stocklist</a>
-    <div class="nav" id="topbar-nav"></div>
-  </div>
+<div class="wrap" style="padding-bottom:0;">
+  <nav class="site-nav">
+    <a class="brand" href="index.html">Stocklist</a>
+    <div class="links">
+      <a href="catalogue.html">Order supplies</a>
+      <a href="index.html#industries">Who it's for</a>
+      <a href="track.html">Track order</a>
+      <a href="supplier-dashboard.html">Supplier dashboard</a>
+    </div>
+    <a class="btn btn-secondary" href="signup.html">Create account</a>
+  </nav>
 </div>
 
-<div class="wrap page-head">
-  <div class="crumbs"><a href="index.html">Stocklist</a> / Log in</div>
-  <h1>Welcome back.</h1>
-</div>
+<div class="auth-wrap">
+  <div class="auth-card">
+    <div class="stamp-tag">MANIFEST NO. <b>0417</b> &nbsp;·&nbsp; STATUS <b>SIGN IN</b></div>
+    <h1>Welcome back.</h1>
+    <p class="sub">Log in to manage your recurring orders, or your incoming orders if you're a supplier.</p>
 
-<div class="wrap">
-  <section style="max-width:460px;">
-
-    <div class="panel" style="display:flex; gap:8px; margin-bottom:18px; padding:6px;">
-      <button class="btn small" id="tab-business" style="flex:1;">Business</button>
-      <button class="btn secondary small" id="tab-supplier" style="flex:1;">Supplier</button>
+    <div class="role-toggle">
+      <span class="active">Customer</span>
+      <span>Supplier</span>
     </div>
 
-    <form id="form-business" class="panel">
-      <div class="field">
-        <label for="b-contact">WhatsApp number or email</label>
-        <input id="b-contact" required>
-      </div>
-      <div class="field">
-        <label for="b-password">Password</label>
-        <input id="b-password" type="password" required>
-      </div>
-      <button class="btn block" type="submit">Log in →</button>
-      <div class="error-text" id="b-error"></div>
-      <p class="field-hint" style="margin-top:14px;">No account yet? <a href="signup.html" style="color:var(--amber);">Create one</a></p>
-    </form>
+    <div class="field">
+      <label>Email or WhatsApp number</label>
+      <input type="text" placeholder="you@business.co.za">
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" placeholder="••••••••">
+    </div>
+    <div class="forgot"><a href="#">Forgot password?</a></div>
 
-    <form id="form-supplier" class="panel" style="display:none;">
-      <div class="field">
-        <label for="s-contact">WhatsApp number or email</label>
-        <input id="s-contact" required>
-      </div>
-      <div class="field">
-        <label for="s-password">Password</label>
-        <input id="s-password" type="password" required>
-      </div>
-      <button class="btn block" type="submit">Log in →</button>
-      <div class="error-text" id="s-error"></div>
-      <p class="field-hint" style="margin-top:14px;">No account yet? <a href="signup.html" style="color:var(--amber);">Create one</a></p>
-    </form>
+    <a class="btn btn-primary" href="dashboard.html" style="display:block;text-align:center;">Log in →</a>
 
-  </section>
+    <div class="auth-foot">Don't have an account? <a href="signup.html">Create one →</a></div>
+  </div>
 </div>
 
-<footer>
-  <div class="wrap">
-    <span class="stencil">Stocklist</span>
-  </div>
-</footer>
-
-<script src="assets/db.js"></script>
-<script src="assets/nav.js"></script>
-<script>
-  const tabBusiness = document.getElementById("tab-business");
-  const tabSupplier = document.getElementById("tab-supplier");
-  const formBusiness = document.getElementById("form-business");
-  const formSupplier = document.getElementById("form-supplier");
-
-  tabBusiness.addEventListener("click", () => {
-    formBusiness.style.display = "block"; formSupplier.style.display = "none";
-    tabBusiness.classList.remove("secondary"); tabSupplier.classList.add("secondary");
-  });
-  tabSupplier.addEventListener("click", () => {
-    formSupplier.style.display = "block"; formBusiness.style.display = "none";
-    tabSupplier.classList.remove("secondary"); tabBusiness.classList.add("secondary");
-  });
-
-  formBusiness.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const errEl = document.getElementById("b-error");
-    errEl.classList.remove("show");
-    try {
-      StocklistDB.loginBusiness(document.getElementById("b-contact").value.trim(), document.getElementById("b-password").value);
-      window.location.href = "dashboard.html";
-    } catch (err) {
-      errEl.textContent = err.message; errEl.classList.add("show");
-    }
-  });
-
-  formSupplier.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const errEl = document.getElementById("s-error");
-    errEl.classList.remove("show");
-    try {
-      StocklistDB.loginSupplier(document.getElementById("s-contact").value.trim(), document.getElementById("s-password").value);
-      window.location.href = "supplier-dashboard.html";
-    } catch (err) {
-      errEl.textContent = err.message; errEl.classList.add("show");
-    }
-  });
-</script>
+<div class="wrap" style="padding-top:0;">
+  <footer>
+    <span>Stocklist · Concept preview</span>
+    <span>Free for businesses to join</span>
+  </footer>
+</div>
 </body>
 </html>

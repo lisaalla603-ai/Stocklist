@@ -4,133 +4,129 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard — Stocklist</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<div class="topbar">
-  <div class="wrap topbar-inner">
-    <a href="index.html" class="brand"><span class="dot"></span>Stocklist</a>
-    <div class="nav" id="topbar-nav"></div>
-  </div>
-</div>
-
-<div class="wrap page-head">
-  <div class="crumbs"><a href="index.html">Stocklist</a> / Dashboard</div>
-  <h1 id="greeting">Dashboard</h1>
-  <p id="subhead"></p>
-</div>
-
 <div class="wrap">
-  <section class="grid-3" id="stat-row"></section>
 
-  <section>
-    <div class="panel-head" style="margin-bottom:14px;"><span class="panel-title">Recurring orders</span></div>
-    <div id="recurring-list" class="stack" style="gap:12px;"></div>
-  </section>
-
-  <section>
-    <div class="panel-head" style="margin-bottom:14px;">
-      <span class="panel-title">Order history</span>
-      <a href="catalogue.html" class="btn secondary small">New order</a>
+  <div class="topbar">
+    <div>
+      <a class="brand" href="index.html">Stocklist</a>
+      <div class="nav-tabs">
+        <a class="active" href="dashboard.html">Dashboard</a>
+        <a href="dashboard.html#recurring">Recurring orders</a>
+        <a href="dashboard.html#history">Order history</a>
+        <a href="catalogue.html">New order</a>
+      </div>
     </div>
-    <div id="order-list" class="stack" style="gap:12px;"></div>
-  </section>
+    <div class="crumb">Stocklist / <b>Dashboard</b> · Riverside Guesthouse</div>
+  </div>
+
+  <h1 style="font-weight:600;font-size:32px;margin:0 0 4px;">Good morning 👋</h1>
+  <p style="color:var(--ink-soft);font-size:14.5px;margin:0 0 26px;">Wednesday 27 August — here's where your supplies stand.</p>
+
+  <!-- ATTENTION HERO -->
+  <div class="attention">
+    <div class="attention-left">
+      <div class="attention-eyebrow">2 things need your attention</div>
+      <h2>Start here before anything else</h2>
+      <ul class="attention-items">
+        <li><span class="dot clay"></span> Your toilet paper &amp; soap order was paused — the supplier's card payment failed</li>
+        <li><span class="dot amber"></span> Cleaning chemical supplier raised prices 6% — your next order will cost more</li>
+        <li><span class="dot green"></span> Your recurring orders saved you an estimated 3.5 hours of reordering this month</li>
+      </ul>
+      <button class="btn btn-ghost" style="border:none;">Review issues →</button>
+    </div>
+    <div class="attention-right">
+      <div class="big">R 1,840</div>
+      <div class="lbl">spent on supplies so far this month, across 4 suppliers</div>
+    </div>
+  </div>
+
+  <!-- KPI STRIP -->
+  <div class="kpi-row">
+    <div class="kpi"><div class="lbl">Active recurring orders</div><div class="val">5</div><div class="delta flat">1 paused</div></div>
+    <div class="kpi"><div class="lbl">Spend this month</div><div class="val">R1,840</div><div class="delta up">↑ 8%</div></div>
+    <div class="kpi"><div class="lbl">Orders placed</div><div class="val">7</div><div class="delta flat">2 in transit</div></div>
+    <div class="kpi"><div class="lbl">Next delivery</div><div class="val" style="font-size:17px;">Fri, 29 Aug</div><div class="delta flat">Toilet paper &amp; soap</div></div>
+    <div class="kpi"><div class="lbl">Suppliers used</div><div class="val">4</div><div class="delta flat">1 new this month</div></div>
+    <div class="kpi"><div class="lbl">Avg order value</div><div class="val">R640</div><div class="delta up">↑ 4%</div></div>
+  </div>
+
+  <!-- QUICK ACTIONS -->
+  <div class="qa-row">
+    <a class="qa" href="catalogue.html"><div class="ic">➕</div><div class="lbl">New order</div></a>
+    <a class="qa" href="#"><div class="ic">🔁</div><div class="lbl">Repeat last order</div></a>
+    <a class="qa" href="#"><div class="ic">⏸️</div><div class="lbl">Pause an order</div></a>
+    <a class="qa" href="#"><div class="ic">💳</div><div class="lbl">Update payment</div></a>
+    <a class="qa" href="track.html"><div class="ic">🚚</div><div class="lbl">Track delivery</div></a>
+    <a class="qa" href="catalogue.html"><div class="ic">🏭</div><div class="lbl">Add supplier</div></a>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-head">
+        <h3>Spend by category</h3>
+        <a href="#">Full breakdown →</a>
+      </div>
+      <div class="health-bars">
+        <div class="health-row"><span class="stamp" style="background:var(--slate-soft);color:var(--slate);width:120px;">CLEANING</span><div class="track"><div class="fill" style="background:var(--slate);width:38%"></div></div><span class="count mono" style="width:56px;text-align:right;">R700</span></div>
+        <div class="health-row"><span class="stamp" style="background:var(--green-soft);color:var(--green);width:120px;">TOILETRIES</span><div class="track"><div class="fill healthy" style="width:29%"></div></div><span class="count mono" style="width:56px;text-align:right;">R530</span></div>
+        <div class="health-row"><span class="stamp" style="background:var(--amber-soft);color:var(--amber);width:120px;">LAUNDRY</span><div class="track"><div class="fill low" style="width:19%"></div></div><span class="count mono" style="width:56px;text-align:right;">R350</span></div>
+        <div class="health-row"><span class="stamp" style="background:var(--clay-soft);color:var(--clay);width:120px;">PAPER GOODS</span><div class="track"><div class="fill out" style="width:14%"></div></div><span class="count mono" style="width:56px;text-align:right;">R260</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <h3>Needs a decision</h3>
+        <a href="#">See all →</a>
+      </div>
+      <div class="alert-list">
+        <div class="alert-item"><div><div class="name">Payment failed — Clean Supply Co.</div><div class="sku">Order paused since 25 Aug</div></div><div class="qty">Fix now</div></div>
+        <div class="alert-item"><div><div class="name">Price change — SudsPro Chemicals</div><div class="sku">+6% from next order</div></div><div class="qty warn">Review</div></div>
+        <div class="alert-item"><div><div class="name">Delivery running late</div><div class="sku">Bin liners, ETA delayed 1 day</div></div><div class="qty warn">Track</div></div>
+      </div>
+      <button class="block-btn">Resolve all →</button>
+    </div>
+  </div>
+
+  <div class="grid3" id="recurring">
+    <div class="card">
+      <div class="card-head">
+        <h3>Recurring orders</h3>
+        <a href="#">Manage all →</a>
+      </div>
+      <table>
+        <tr><th>Manifest</th><th>Supplier</th><th>Every</th><th>Next</th><th>Status</th></tr>
+        <tr><td>Toilet paper &amp; soap</td><td>Clean Supply Co.</td><td class="mono">12 days</td><td class="mono">29 Aug</td><td><span class="pill bad">PAUSED</span></td></tr>
+        <tr><td>Cleaning chemicals</td><td>SudsPro Chemicals</td><td class="mono">Weekly</td><td class="mono">30 Aug</td><td><span class="pill active">ACTIVE</span></td></tr>
+        <tr><td>Bin liners, 50L</td><td>PackRight Supplies</td><td class="mono">2 weeks</td><td class="mono">2 Sep</td><td><span class="pill active">ACTIVE</span></td></tr>
+        <tr><td>Laundry detergent</td><td>Clean Supply Co.</td><td class="mono">3 weeks</td><td class="mono">9 Sep</td><td><span class="pill active">ACTIVE</span></td></tr>
+        <tr><td>Shampoo &amp; amenities</td><td>GuestStock SA</td><td class="mono">Monthly</td><td class="mono">14 Sep</td><td><span class="pill active">ACTIVE</span></td></tr>
+      </table>
+    </div>
+
+    <div class="card" id="history">
+      <div class="card-head">
+        <h3>Recent order history</h3>
+        <a href="#">View all →</a>
+      </div>
+      <table>
+        <tr><th>Date</th><th>Supplier</th><th>Total</th><th>Status</th></tr>
+        <tr><td class="mono">22 Aug</td><td>SudsPro Chemicals</td><td class="mono">R390</td><td><span class="pill active">DELIVERED</span></td></tr>
+        <tr><td class="mono">19 Aug</td><td>GuestStock SA</td><td class="mono">R610</td><td><span class="pill active">DELIVERED</span></td></tr>
+        <tr><td class="mono">17 Aug</td><td>PackRight Supplies</td><td class="mono">R220</td><td><span class="pill warn">IN TRANSIT</span></td></tr>
+        <tr><td class="mono">12 Aug</td><td>Clean Supply Co.</td><td class="mono">R640</td><td><span class="pill active">DELIVERED</span></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <footer>
+    <span>Stocklist · Concept preview</span>
+    <span>Logged in as Riverside Guesthouse · <a href="login.html">Log out</a></span>
+  </footer>
+
 </div>
-
-<footer>
-  <div class="wrap"><span class="stencil">Stocklist</span></div>
-</footer>
-
-<script src="assets/db.js"></script>
-<script src="assets/nav.js"></script>
-<script>
-  const session = StocklistDB.getSession();
-  if (!session || session.type !== "business") {
-    window.location.href = "login.html";
-  }
-  const biz = StocklistDB.getBusiness(session.id);
-  document.getElementById("greeting").textContent = biz.businessName;
-  document.getElementById("subhead").textContent = biz.city + " · " + biz.businessType;
-
-  const orders = StocklistDB.listOrdersForBusiness(biz.id);
-  const statusLabel = { placed: "Placed", confirmed: "Confirmed", packed: "Packed", out_for_delivery: "Out for delivery", delivered: "Delivered" };
-  const statusClass = { placed: "b-amber", confirmed: "b-amber", packed: "b-amber", out_for_delivery: "b-amber", delivered: "b-green" };
-
-  // ---- stats ----
-  const monthlySpend = orders
-    .filter((o) => { const d = new Date(o.createdAt); const n = new Date(); return d.getMonth() === n.getMonth() && d.getFullYear() === n.getFullYear(); })
-    .reduce((sum, o) => sum + o.total, 0);
-  const totalSpend = orders.reduce((sum, o) => sum + o.total, 0);
-  const upcoming = orders.filter((o) => o.recurrence.enabled).sort((a, b) => new Date(a.recurrence.nextDate) - new Date(b.recurrence.nextDate))[0];
-
-  document.getElementById("stat-row").innerHTML = `
-    <div class="panel stat"><div class="num">R${monthlySpend.toFixed(0)}</div><div class="lbl">Spend this month</div></div>
-    <div class="panel stat"><div class="num">R${totalSpend.toFixed(0)}</div><div class="lbl">Total spend</div></div>
-    <div class="panel stat"><div class="num">${upcoming ? new Date(upcoming.recurrence.nextDate).toLocaleDateString("en-ZA", { day: "2-digit", month: "short" }) : "—"}</div><div class="lbl">Next delivery</div></div>
-  `;
-
-  // ---- recurring orders ----
-  const recurring = orders.filter((o) => o.recurrence.enabled);
-  const recurEl = document.getElementById("recurring-list");
-  if (recurring.length === 0) {
-    recurEl.innerHTML = `<div class="empty-state"><span class="stencil">No recurring orders yet</span>Set one up at checkout to stop reordering manually.</div>`;
-  } else {
-    recurEl.innerHTML = recurring.map((o) => {
-      const supplier = StocklistDB.getSupplier(o.supplierId);
-      return `
-        <div class="panel">
-          <div class="flex-between">
-            <div>
-              <div style="font-weight:700;">${supplier.name}</div>
-              <span class="stencil dim">EVERY ${o.recurrence.intervalDays} DAYS · NEXT ${new Date(o.recurrence.nextDate).toLocaleDateString("en-ZA", { day: "2-digit", month: "short", year: "numeric" })}</span>
-            </div>
-            <div class="flex-between" style="gap:10px;">
-              <span style="font-family:var(--font-display); font-size:1.2rem; font-weight:700;">R${o.total.toFixed(2)}</span>
-              <button class="btn small" data-reorder="${o.id}">Reorder now</button>
-            </div>
-          </div>
-        </div>
-      `;
-    }).join("");
-  }
-
-  // ---- order history ----
-  const orderListEl = document.getElementById("order-list");
-  if (orders.length === 0) {
-    orderListEl.innerHTML = `<div class="empty-state"><span class="stencil">No orders yet</span><a href="catalogue.html" style="color:var(--amber);">Place your first order →</a></div>`;
-  } else {
-    orderListEl.innerHTML = orders.map((o) => {
-      const supplier = StocklistDB.getSupplier(o.supplierId);
-      return `
-        <div class="panel">
-          <div class="flex-between">
-            <div>
-              <div style="font-weight:700;">${supplier.name}</div>
-              <span class="stencil dim">${new Date(o.createdAt).toLocaleDateString("en-ZA", { day: "2-digit", month: "short", year: "numeric" })} · ${o.items.length} ITEMS</span>
-            </div>
-            <div class="flex-between" style="gap:10px;">
-              <span class="badge ${statusClass[o.status]}"><span class="pip"></span>${statusLabel[o.status]}</span>
-              <span style="font-family:var(--font-display); font-size:1.1rem; font-weight:700;">R${o.total.toFixed(2)}</span>
-            </div>
-          </div>
-          <div class="flex-between" style="margin-top:12px;">
-            <a href="track.html?order=${o.id}" class="btn secondary small">Track order</a>
-            <button class="btn small" data-reorder="${o.id}">Reorder</button>
-          </div>
-        </div>
-      `;
-    }).join("");
-  }
-
-  document.querySelectorAll("[data-reorder]").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const newOrder = StocklistDB.reorder(btn.dataset.reorder);
-      window.location.href = "track.html?order=" + newOrder.id;
-    });
-  });
-</script>
 </body>
 </html>

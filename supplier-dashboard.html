@@ -4,181 +4,135 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Supplier dashboard — Stocklist</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<div class="topbar">
-  <div class="wrap topbar-inner">
-    <a href="index.html" class="brand"><span class="dot"></span>Stocklist</a>
-    <div class="nav" id="topbar-nav"></div>
-  </div>
-</div>
-
-<div class="wrap page-head">
-  <div class="crumbs"><a href="index.html">Stocklist</a> / Supplier dashboard</div>
-  <h1 id="greeting">Supplier dashboard</h1>
-  <p id="subhead"></p>
-</div>
-
 <div class="wrap">
-  <section class="grid-3" id="stat-row"></section>
 
-  <section>
-    <div class="panel-head" style="margin-bottom:14px;"><span class="panel-title">Incoming orders</span></div>
-    <div id="order-list" class="stack" style="gap:12px;"></div>
-  </section>
-
-  <section>
-    <div class="panel-head" style="margin-bottom:14px;"><span class="panel-title">Payout details</span></div>
-    <div class="panel">
-      <p style="font-size:.88rem;">Where you'll receive your share once payments go live. Stocklist keeps its 10% commission; the rest is paid out here.</p>
-      <form id="payout-form" class="field-row" style="align-items:end; flex-wrap:wrap;">
-        <div class="field" style="margin-bottom:0; min-width:160px; flex:1;">
-          <label for="pay-bank">Bank</label>
-          <input id="pay-bank" placeholder="Capitec">
-        </div>
-        <div class="field" style="margin-bottom:0; min-width:180px; flex:1;">
-          <label for="pay-holder">Account holder</label>
-          <input id="pay-holder" placeholder="Delta Hygiene Supplies Pty Ltd">
-        </div>
-        <div class="field" style="margin-bottom:0; min-width:160px; flex:1;">
-          <label for="pay-acc">Account number</label>
-          <input id="pay-acc" placeholder="0000000000">
-        </div>
-        <div class="field" style="margin-bottom:0; min-width:120px; flex:1;">
-          <label for="pay-branch">Branch code</label>
-          <input id="pay-branch" placeholder="470010">
-        </div>
-        <button class="btn" type="submit">Save</button>
-      </form>
-      <div class="success-banner" id="payout-saved">Payout details saved.</div>
+  <div class="topbar">
+    <div>
+      <a class="brand" href="index.html">Stocklist</a>
+      <div class="nav-tabs">
+        <a class="active" href="supplier-dashboard.html">Dashboard</a>
+        <a href="supplier-dashboard.html#orders">Incoming orders</a>
+        <a href="supplier-dashboard.html#products">Your products</a>
+        <a href="supplier-dashboard.html#payouts">Payouts</a>
+      </div>
     </div>
-  </section>
+    <div class="crumb">Stocklist / <b>Supplier dashboard</b> · Clean Supply Co.</div>
+  </div>
 
-  <section>
-    <div class="panel-head" style="margin-bottom:14px;"><span class="panel-title">Your products</span></div>
-    <div class="panel">
-      <div id="product-list" class="stack"></div>
-      <hr class="divider">
-      <form id="add-product-form" class="field-row" style="align-items:end;">
-        <div class="field" style="margin-bottom:0;">
-          <label for="p-name">Product name</label>
-          <input id="p-name" required placeholder="Toilet paper, 2-ply">
-        </div>
-        <div class="field" style="margin-bottom:0;">
-          <label for="p-unit">Unit</label>
-          <input id="p-unit" required placeholder="pack of 9">
-        </div>
-        <div class="field" style="margin-bottom:0;">
-          <label for="p-price">Price (R)</label>
-          <input id="p-price" type="number" min="0" step="0.01" required placeholder="89.00">
-        </div>
-        <button class="btn" type="submit">Add product</button>
-      </form>
+  <h1 style="font-weight:600;font-size:32px;margin:0 0 4px;">Good morning 👋</h1>
+  <p style="color:var(--ink-soft);font-size:14.5px;margin:0 0 26px;">Wednesday 27 August — 3 orders waiting on you.</p>
+
+  <!-- ATTENTION HERO -->
+  <div class="attention">
+    <div class="attention-left">
+      <div class="attention-eyebrow">3 things need your attention</div>
+      <h2>Start here before anything else</h2>
+      <ul class="attention-items">
+        <li><span class="dot clay"></span> 2 products are out of stock — recurring orders using them will fail to dispatch</li>
+        <li><span class="dot amber"></span> 3 incoming orders haven't been packed yet, one is due today</li>
+        <li><span class="dot green"></span> R1,240 payout pending from orders delivered this week</li>
+      </ul>
+      <button class="btn btn-ghost" style="border:none;">Review issues →</button>
     </div>
-  </section>
+    <div class="attention-right">
+      <div class="big">R1,240</div>
+      <div class="lbl">payout pending, after Stocklist's 10% commission</div>
+    </div>
+  </div>
+
+  <!-- KPI STRIP -->
+  <div class="kpi-row">
+    <div class="kpi"><div class="lbl">Products listed</div><div class="val">18</div><div class="delta flat">+2 this month</div></div>
+    <div class="kpi"><div class="lbl">Incoming orders</div><div class="val">3</div><div class="delta up">1 due today</div></div>
+    <div class="kpi"><div class="lbl">Revenue (mtd)</div><div class="val">R6,180</div><div class="delta up">↑ 11%</div></div>
+    <div class="kpi"><div class="lbl">Low stock</div><div class="val" style="color:var(--amber)">4</div><div class="delta down">↑ 1 vs last week</div></div>
+    <div class="kpi"><div class="lbl">Fulfilment rate</div><div class="val">96%</div><div class="delta flat">Last 30 days</div></div>
+    <div class="kpi"><div class="lbl">Avg dispatch time</div><div class="val">1.2d</div><div class="delta up">↓ 0.3d</div></div>
+  </div>
+
+  <!-- QUICK ACTIONS -->
+  <div class="qa-row">
+    <a class="qa" href="#products"><div class="ic">➕</div><div class="lbl">Add product</div></a>
+    <a class="qa" href="#orders"><div class="ic">📦</div><div class="lbl">Pack an order</div></a>
+    <a class="qa" href="#"><div class="ic">🔄</div><div class="lbl">Stock take</div></a>
+    <a class="qa" href="#"><div class="ic">💰</div><div class="lbl">Update prices</div></a>
+    <a class="qa" href="#payouts"><div class="ic">🏦</div><div class="lbl">Payout details</div></a>
+    <a class="qa" href="#"><div class="ic">📊</div><div class="lbl">View reports</div></a>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-head"><h3>Stock health</h3><a href="#products">View products →</a></div>
+      <div class="health-bars">
+        <div class="health-row"><span class="stamp healthy">HEALTHY</span><div class="track"><div class="fill healthy" style="width:67%"></div></div><span class="count">12</span></div>
+        <div class="health-row"><span class="stamp low">LOW STOCK</span><div class="track"><div class="fill low" style="width:22%"></div></div><span class="count">4</span></div>
+        <div class="health-row"><span class="stamp out">OUT OF STOCK</span><div class="track"><div class="fill out" style="width:11%"></div></div><span class="count">2</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>Needs restocking</h3><a href="#products">See all →</a></div>
+      <div class="alert-list">
+        <div class="alert-item"><div><div class="name">Toilet paper, 2-ply (bulk)</div><div class="sku">TP-2PLY-24</div></div><div class="qty">Out of stock</div></div>
+        <div class="alert-item"><div><div class="name">All-purpose cleaner, 5L</div><div class="sku">CLN-5L</div></div><div class="qty">Out of stock</div></div>
+        <div class="alert-item"><div><div class="name">Hand soap refill, 1L</div><div class="sku">SOAP-1L</div></div><div class="qty warn">6 left</div></div>
+        <div class="alert-item"><div><div class="name">Laundry detergent, 2L</div><div class="sku">DET-2L</div></div><div class="qty warn">9 left</div></div>
+      </div>
+      <button class="block-btn">Mark as restocked →</button>
+    </div>
+  </div>
+
+  <div id="orders" class="card" style="margin-bottom:20px;">
+    <div class="card-head"><h3>Incoming orders</h3><a href="#">View all →</a></div>
+    <table>
+      <tr><th>Order</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th></tr>
+      <tr><td class="mono">#ST-1042</td><td>Riverside Guesthouse</td><td>Toilet paper, soap</td><td class="mono">R250</td><td><span class="pill bad">FAILED PAYMENT</span></td></tr>
+      <tr><td class="mono">#ST-1041</td><td>Vine &amp; Barrel Café</td><td>All-purpose cleaner ×3</td><td class="mono">R285</td><td><span class="pill warn">TO PACK</span></td></tr>
+      <tr><td class="mono">#ST-1039</td><td>Sunrise Salon</td><td>Laundry detergent ×2</td><td class="mono">R190</td><td><span class="pill warn">TO PACK</span></td></tr>
+      <tr><td class="mono">#ST-1035</td><td>Northgate Offices</td><td>Hand soap refill ×4</td><td class="mono">R180</td><td><span class="pill active">DISPATCHED</span></td></tr>
+    </table>
+  </div>
+
+  <div id="products" class="card" style="margin-bottom:20px;">
+    <div class="card-head"><h3>Your products</h3><a href="#">Add product →</a></div>
+    <table>
+      <tr><th>Product</th><th>Unit</th><th>Price</th><th>Stock</th><th>Status</th></tr>
+      <tr><td>Toilet paper, 2-ply (bulk)</td><td>24-pack</td><td class="mono">R160</td><td class="mono">0</td><td><span class="pill bad">OUT OF STOCK</span></td></tr>
+      <tr><td>All-purpose cleaner, 5L</td><td>5L</td><td class="mono">R95</td><td class="mono">0</td><td><span class="pill bad">OUT OF STOCK</span></td></tr>
+      <tr><td>Hand soap refill, 1L</td><td>1L</td><td class="mono">R45</td><td class="mono">6</td><td><span class="pill warn">LOW STOCK</span></td></tr>
+      <tr><td>Laundry detergent, 2L</td><td>2L</td><td class="mono">R95</td><td class="mono">9</td><td><span class="pill warn">LOW STOCK</span></td></tr>
+      <tr><td>Bin liners, 50L</td><td>Roll of 20</td><td class="mono">R70</td><td class="mono">54</td><td><span class="pill active">HEALTHY</span></td></tr>
+    </table>
+  </div>
+
+  <div id="payouts" class="card">
+    <div class="card-head"><h3>Payout details</h3></div>
+    <p style="font-size:13.5px;color:var(--ink-soft);margin:0 0 16px;">Where you'll receive your share once payments go live. Stocklist keeps its 10% commission; the rest is paid out here.</p>
+    <div class="grid3">
+      <label style="font-size:13px;">Bank
+        <input type="text" placeholder="e.g. Capitec" style="width:100%;margin-top:6px;padding:9px 12px;border:1px solid var(--line);border-radius:6px;font-family:'IBM Plex Sans';">
+      </label>
+      <label style="font-size:13px;">Account holder
+        <input type="text" placeholder="Clean Supply Co." style="width:100%;margin-top:6px;padding:9px 12px;border:1px solid var(--line);border-radius:6px;font-family:'IBM Plex Sans';">
+      </label>
+      <label style="font-size:13px;">Account number
+        <input type="text" placeholder="•••• •••• ••••" style="width:100%;margin-top:6px;padding:9px 12px;border:1px solid var(--line);border-radius:6px;font-family:'IBM Plex Sans';">
+      </label>
+      <label style="font-size:13px;">Branch code
+        <input type="text" placeholder="470010" style="width:100%;margin-top:6px;padding:9px 12px;border:1px solid var(--line);border-radius:6px;font-family:'IBM Plex Sans';">
+      </label>
+    </div>
+    <button class="btn btn-primary" style="margin-top:16px;">Save</button>
+  </div>
+
+  <footer>
+    <span>Stocklist · Concept preview</span>
+    <span>Logged in as Clean Supply Co. · <a href="login.html">Log out</a></span>
+  </footer>
+
 </div>
-
-<footer>
-  <div class="wrap"><span class="stencil">Stocklist</span></div>
-</footer>
-
-<script src="assets/db.js"></script>
-<script src="assets/nav.js"></script>
-<script>
-  const session = StocklistDB.getSession();
-  if (!session || session.type !== "supplier") {
-    window.location.href = "login.html";
-  }
-  const supplier = StocklistDB.getSupplier(session.id);
-  document.getElementById("greeting").textContent = supplier.name;
-  document.getElementById("subhead").textContent = supplier.city + " · " + supplier.categories.join(", ");
-
-  const STATUS_FLOW = StocklistDB.STATUS_FLOW;
-  const statusLabel = { placed: "Placed", confirmed: "Confirmed", packed: "Packed", out_for_delivery: "Out for delivery", delivered: "Delivered" };
-
-  function render() {
-    const orders = StocklistDB.listOrdersForSupplier(supplier.id);
-    const revenue = orders.reduce((sum, o) => sum + o.total, 0);
-    const commission = revenue * 0.10;
-    const pending = orders.filter((o) => o.status !== "delivered").length;
-
-    document.getElementById("stat-row").innerHTML = `
-      <div class="panel stat"><div class="num">${orders.length}</div><div class="lbl">Total orders</div></div>
-      <div class="panel stat"><div class="num">${pending}</div><div class="lbl">Pending fulfilment</div></div>
-      <div class="panel stat"><div class="num">R${revenue.toFixed(0)}</div><div class="lbl">Revenue (commission ≈ R${commission.toFixed(0)})</div></div>
-    `;
-
-    const orderListEl = document.getElementById("order-list");
-    if (orders.length === 0) {
-      orderListEl.innerHTML = `<div class="empty-state"><span class="stencil">No orders yet</span>Orders placed against your catalogue will show up here.</div>`;
-    } else {
-      orderListEl.innerHTML = orders.map((o) => {
-        const biz = StocklistDB.getBusiness(o.businessId);
-        const idx = STATUS_FLOW.indexOf(o.status);
-        const nextStatus = STATUS_FLOW[idx + 1];
-        return `
-          <div class="panel">
-            <div class="flex-between">
-              <div>
-                <div style="font-weight:700;">${biz ? biz.businessName : "Unknown business"}</div>
-                <span class="stencil dim">${new Date(o.createdAt).toLocaleDateString("en-ZA", { day: "2-digit", month: "short", year: "numeric" })} · ${o.items.length} ITEMS ${o.recurrence.enabled ? "· RECURRING" : ""}</span>
-              </div>
-              <div class="flex-between" style="gap:10px;">
-                <span class="badge ${o.status === "delivered" ? "b-green" : "b-amber"}"><span class="pip"></span>${statusLabel[o.status]}</span>
-                <span style="font-family:var(--font-display); font-size:1.1rem; font-weight:700;">R${o.total.toFixed(2)}</span>
-              </div>
-            </div>
-            ${nextStatus ? `<div style="margin-top:12px;"><button class="btn small" data-advance="${o.id}">Mark as ${statusLabel[nextStatus]}</button></div>` : ""}
-          </div>
-        `;
-      }).join("");
-      document.querySelectorAll("[data-advance]").forEach((btn) => {
-        btn.addEventListener("click", () => { StocklistDB.advanceOrderStatus(btn.dataset.advance); render(); });
-      });
-    }
-
-    const products = StocklistDB.listProducts(supplier.id);
-    document.getElementById("product-list").innerHTML = products.length
-      ? products.map((p) => `<div class="line-item"><div><div class="name">${p.name}</div><div class="meta">${p.unit}</div></div><div>R${p.price.toFixed(2)}</div></div>`).join("")
-      : `<p class="muted" style="font-size:.88rem;">No products listed yet — add your first one below.</p>`;
-  }
-
-  document.getElementById("add-product-form").addEventListener("submit", (e) => {
-    e.preventDefault();
-    StocklistDB.addProduct(supplier.id, {
-      name: document.getElementById("p-name").value.trim(),
-      unit: document.getElementById("p-unit").value.trim(),
-      price: document.getElementById("p-price").value,
-    });
-    e.target.reset();
-    render();
-  });
-
-  // ---- payout details ----
-  if (supplier.payout) {
-    document.getElementById("pay-bank").value = supplier.payout.bankName || "";
-    document.getElementById("pay-holder").value = supplier.payout.accountHolder || "";
-    document.getElementById("pay-acc").value = supplier.payout.accountNumber || "";
-    document.getElementById("pay-branch").value = supplier.payout.branchCode || "";
-  }
-  document.getElementById("payout-form").addEventListener("submit", (e) => {
-    e.preventDefault();
-    StocklistDB.savePayoutDetails(supplier.id, {
-      bankName: document.getElementById("pay-bank").value.trim(),
-      accountHolder: document.getElementById("pay-holder").value.trim(),
-      accountNumber: document.getElementById("pay-acc").value.trim(),
-      branchCode: document.getElementById("pay-branch").value.trim(),
-    });
-    const banner = document.getElementById("payout-saved");
-    banner.classList.add("show");
-    setTimeout(() => banner.classList.remove("show"), 2500);
-  });
-
-  render();
-</script>
 </body>
 </html>

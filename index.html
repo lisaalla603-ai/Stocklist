@@ -4,512 +4,158 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Stocklist — Never place the same order twice</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 <style>
-  :root{
-    --ink:#141b22;
-    --ink-soft:#1c2530;
-    --paper:#f2ede1;
-    --paper-dim:#e7e0cf;
-    --orange:#e0590c;
-    --green:#4c7a3d;
-    --stamp-red:#a8362a;
-    --muted:#8b93a0;
-    --line:#33404d;
-    --display: 'Oswald', sans-serif;
-    --body: 'IBM Plex Sans', sans-serif;
-    --mono: 'IBM Plex Mono', monospace;
-  }
-  *{box-sizing:border-box; margin:0; padding:0;}
-  html{scroll-behavior:smooth;}
-  body{
-    background:var(--ink);
-    color:var(--paper);
-    font-family:var(--body);
-    -webkit-font-smoothing:antialiased;
-    overflow-x:hidden;
-  }
-  a{color:inherit;}
-  @media (prefers-reduced-motion: reduce){
-    *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important;}
+  .hero{padding:50px 0 60px;}
+  .hero h1{font-size:52px;font-weight:600;line-height:1.05;letter-spacing:-0.01em;margin:18px 0 20px;max-width:780px;}
+  .hero h1 em{font-style:italic;color:var(--clay);}
+  .hero p.lede{font-size:17px;color:var(--ink-soft);max-width:560px;line-height:1.55;margin:0 0 28px;}
+  .cta-row{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:36px;}
+  .chips{display:flex;gap:10px;flex-wrap:wrap;font-size:12.5px;}
+  .chip{background:var(--paper-raised);border:1px solid var(--line);border-radius:20px;padding:6px 14px;color:var(--ink-soft);}
+
+  section{padding:56px 0;border-top:1px solid var(--line);}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:10px;}
+  .section-title{font-size:30px;font-weight:600;max-width:620px;margin:0 0 34px;line-height:1.2;}
+
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;}
+  .step{background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);padding:20px;}
+  .step .no{font-family:'IBM Plex Mono',monospace;color:var(--ink-soft);font-size:11.5px;margin-bottom:10px;}
+  .step h4{margin:0 0 8px;font-family:'Fraunces',serif;font-size:16.5px;}
+  .step p{margin:0;font-size:13.5px;color:var(--ink-soft);line-height:1.5;}
+
+  .commission-row{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:32px;}
+  .commission-card{background:var(--ink);color:var(--paper-raised);border-radius:var(--radius);padding:22px;}
+  .commission-card .big{font-family:'IBM Plex Mono',monospace;font-size:28px;font-weight:600;color:#EFC77E;}
+  .commission-card .lbl{font-size:11.5px;color:#C9C4AE;text-transform:uppercase;letter-spacing:0.05em;margin-top:8px;}
+
+  .industry-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;}
+  .ind-card{background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);padding:18px;}
+  .ind-card .tag{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--ink-soft);letter-spacing:0.04em;margin-bottom:10px;}
+  .ind-card h4{margin:0 0 10px;font-family:'Fraunces',serif;font-size:15.5px;}
+  .ind-card ul{margin:0;padding-left:16px;font-size:12.5px;color:var(--ink-soft);line-height:1.7;}
+
+  .manifest-card{background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);padding:26px;max-width:480px;}
+  .manifest-line{display:flex;justify-content:space-between;font-size:13.5px;padding:9px 0;border-bottom:1px solid var(--line);}
+  .manifest-line:last-of-type{border-bottom:none;}
+  .manifest-total{display:flex;justify-content:space-between;font-weight:600;font-size:16px;padding-top:14px;}
+
+  .waitlist-card{background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);padding:30px;max-width:560px;}
+  .field{margin-bottom:14px;}
+  .field label{font-size:12.5px;font-weight:600;display:block;margin-bottom:6px;}
+  .field input,.field select{
+    width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:6px;
+    font-family:'IBM Plex Sans';font-size:14px;background:var(--paper);
   }
 
-  /* ---------- shared layout ---------- */
-  .wrap{max-width:1180px; margin:0 auto; padding:0 32px;}
-  section{padding:110px 0;}
-  @media (max-width:720px){ section{padding:70px 0;} .wrap{padding:0 20px;} }
-
-  .eyebrow{
-    font-family:var(--mono);
-    font-size:12.5px;
-    letter-spacing:0.14em;
-    text-transform:uppercase;
-    color:var(--orange);
-    display:flex; align-items:center; gap:10px;
-    margin-bottom:18px;
+  @media(max-width:900px){
+    .hero h1{font-size:36px;}
+    .steps,.industry-grid,.commission-row{grid-template-columns:1fr 1fr;}
   }
-  .eyebrow::before{content:""; width:22px; height:1px; background:var(--orange);}
-
-  h1,h2,h3{ font-family:var(--display); font-weight:600; text-transform:uppercase; letter-spacing:0.01em; line-height:1.05;}
-
-  /* ---------- nav ---------- */
-  header{
-    position:sticky; top:0; z-index:50;
-    background:rgba(20,27,34,0.92);
-    backdrop-filter:blur(6px);
-    border-bottom:1px solid var(--line);
-  }
-  nav{
-    max-width:1180px; margin:0 auto; padding:18px 32px;
-    display:flex; align-items:center; justify-content:space-between;
-  }
-  .brand{
-    font-family:var(--display); font-weight:700; font-size:22px; letter-spacing:0.02em;
-    text-transform:uppercase; display:flex; align-items:center; gap:10px;
-  }
-  .brand .dot{width:9px; height:9px; background:var(--orange); display:inline-block; border-radius:1px; transform:rotate(45deg);}
-  .navlinks{display:flex; gap:34px; font-size:14px; font-family:var(--mono);}
-  .navlinks a{text-decoration:none; color:var(--muted); transition:color .2s;}
-  .navlinks a:hover{color:var(--paper);}
-  .nav-cta{
-    font-family:var(--mono); font-size:13px; text-decoration:none;
-    background:var(--orange); color:var(--ink); padding:9px 18px;
-    border-radius:2px; font-weight:600; letter-spacing:0.02em;
-  }
-  @media (max-width:720px){ .navlinks{display:none;} }
-
-  /* ---------- hero ---------- */
-  .hero{padding:90px 0 60px; position:relative;}
-  .manifest-tag{
-    font-family:var(--mono); font-size:12.5px; color:var(--muted);
-    letter-spacing:0.1em; margin-bottom:28px; display:flex; gap:22px; flex-wrap:wrap;
-  }
-  .manifest-tag span b{color:var(--paper); font-weight:600;}
-  .hero h1{
-    font-size:clamp(40px, 6.4vw, 84px);
-    max-width:920px;
-    margin-bottom:26px;
-  }
-  .hero h1 em{ font-style:normal; color:var(--orange); }
-  .hero-sub{
-    font-size:18px; line-height:1.6; color:#c9cdd4; max-width:560px; margin-bottom:40px;
-  }
-  .hero-ctas{display:flex; gap:16px; flex-wrap:wrap; margin-bottom:70px;}
-  .btn-primary{
-    font-family:var(--mono); font-size:14px; text-decoration:none; font-weight:600;
-    background:var(--orange); color:var(--ink); padding:15px 26px; border-radius:2px;
-    letter-spacing:0.02em; border:1px solid var(--orange); transition:transform .15s ease;
-  }
-  .btn-primary:hover{transform:translateY(-2px);}
-  .btn-ghost{
-    font-family:var(--mono); font-size:14px; text-decoration:none; font-weight:500;
-    color:var(--paper); padding:15px 26px; border-radius:2px; border:1px solid var(--line);
-    transition:border-color .15s ease;
-  }
-  .btn-ghost:hover{border-color:var(--paper);}
-
-  /* conveyor strip */
-  .conveyor{
-    border-top:1px solid var(--line); border-bottom:1px solid var(--line);
-    padding:18px 0; overflow:hidden; position:relative;
-  }
-  .conveyor-track{
-    display:flex; gap:48px; white-space:nowrap;
-    font-family:var(--mono); font-size:13px; color:var(--muted);
-    animation: scroll-left 26s linear infinite;
-    width:max-content;
-  }
-  .conveyor-track span{display:flex; align-items:center; gap:10px;}
-  .conveyor-track span::before{content:"—"; color:var(--orange);}
-  @keyframes scroll-left{ from{transform:translateX(0);} to{transform:translateX(-50%);} }
-
-  /* ---------- how it works ---------- */
-  .flow-diagram{
-    display:flex; align-items:center; justify-content:space-between;
-    margin-top:56px; position:relative; flex-wrap:wrap; gap:20px;
-  }
-  .flow-node{
-    background:var(--paper); color:var(--ink); padding:22px 20px;
-    width:210px; border-radius:2px; position:relative; z-index:2;
-  }
-  .flow-node .fn-label{font-family:var(--mono); font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--stamp-red); margin-bottom:8px;}
-  .flow-node .fn-title{font-family:var(--display); font-size:19px; text-transform:uppercase; margin-bottom:6px;}
-  .flow-node .fn-sub{font-size:13px; color:#4a4f57; line-height:1.4;}
-  .flow-node.accent{background:var(--orange);}
-  .flow-node.accent .fn-label{color:var(--ink);}
-  .flow-line{
-    flex:1; min-width:36px; height:1px; background:repeating-linear-gradient(to right, var(--muted) 0 6px, transparent 6px 12px);
-    position:relative; top:0;
-  }
-  @media (max-width:900px){
-    .flow-diagram{flex-direction:column; align-items:flex-start;}
-    .flow-line{width:1px; height:36px; background:repeating-linear-gradient(to bottom, var(--muted) 0 6px, transparent 6px 12px);}
-  }
-  .commission-note{
-    margin-top:44px; font-family:var(--mono); font-size:13.5px; color:var(--muted);
-    border-left:2px solid var(--orange); padding-left:18px; max-width:640px; line-height:1.7;
-  }
-  .commission-note b{color:var(--paper); font-weight:600;}
-
-  /* ---------- industries ---------- */
-  .industry-grid{
-    display:grid; grid-template-columns:repeat(auto-fit, minmax(250px,1fr));
-    gap:1px; background:var(--line); margin-top:50px; border:1px solid var(--line);
-  }
-  .bin{
-    background:var(--ink-soft); padding:30px 26px; transition:background .2s ease;
-  }
-  .bin:hover{background:#232e39;}
-  .bin .bin-sku{font-family:var(--mono); font-size:11px; color:var(--orange); letter-spacing:0.08em; margin-bottom:14px;}
-  .bin h3{font-size:20px; margin-bottom:12px;}
-  .bin ul{list-style:none; font-size:13.5px; color:var(--muted); line-height:1.9;}
-  .bin ul li::before{content:"· "; color:var(--orange);}
-
-  /* ---------- signature: manifest checklist ---------- */
-  .manifest-signature{
-    margin-top:56px; display:grid; grid-template-columns:1fr 1.2fr; gap:0;
-    background:var(--paper); color:var(--ink); border-radius:3px; overflow:hidden;
-  }
-  @media (max-width:840px){ .manifest-signature{grid-template-columns:1fr;} }
-  .manifest-left{
-    padding:40px 36px; border-right:1px dashed #cfc6ab; position:relative;
-  }
-  @media (max-width:840px){ .manifest-left{border-right:none; border-bottom:1px dashed #cfc6ab;} }
-  .stamp{
-    position:absolute; top:32px; right:28px;
-    border:2px solid var(--stamp-red); color:var(--stamp-red);
-    font-family:var(--mono); font-weight:600; font-size:11px;
-    padding:6px 10px; letter-spacing:0.06em; transform:rotate(6deg);
-    border-radius:3px; text-transform:uppercase;
-  }
-  @media (max-width:520px){ .stamp{position:static; display:inline-block; transform:none; margin-top:16px;} }
-  .manifest-left .ml-eyebrow{font-family:var(--mono); font-size:11.5px; letter-spacing:0.1em; text-transform:uppercase; color:var(--stamp-red); margin-bottom:10px;}
-  .manifest-left h3{font-size:26px; color:var(--ink); max-width:280px; margin-bottom:14px;}
-  .manifest-left p{font-size:14px; color:#5a5f66; line-height:1.65; max-width:300px;}
-  .manifest-right{padding:36px;}
-  .m-row{
-    display:flex; align-items:center; justify-content:space-between;
-    padding:13px 0; border-bottom:1px solid #ddd4b9;
-    font-family:var(--body); font-size:14.5px;
-  }
-  .m-row:last-of-type{border-bottom:none;}
-  .m-left{display:flex; align-items:center; gap:14px;}
-  .m-check{
-    width:18px; height:18px; border:1.5px solid var(--green); border-radius:2px;
-    display:flex; align-items:center; justify-content:center; flex-shrink:0;
-  }
-  .m-check::after{content:"✓"; color:var(--green); font-size:12px; font-weight:700;}
-  .m-name{color:var(--ink); font-weight:500;}
-  .m-qty{font-family:var(--mono); font-size:12.5px; color:#7c8188;}
-  .m-total{
-    display:flex; justify-content:space-between; align-items:center;
-    margin-top:18px; padding-top:18px; border-top:2px solid var(--ink);
-    font-family:var(--mono); font-size:14px;
-  }
-  .m-total b{font-family:var(--display); font-size:20px; letter-spacing:0.02em;}
-
-  /* ---------- proof / numbers ---------- */
-  .numbers{
-    display:grid; grid-template-columns:repeat(3,1fr); gap:1px;
-    background:var(--line); border:1px solid var(--line); margin-top:50px;
-  }
-  @media (max-width:700px){ .numbers{grid-template-columns:1fr;} }
-  .num-cell{background:var(--ink); padding:34px 28px;}
-  .num-cell .n-val{font-family:var(--display); font-size:42px; color:var(--orange);}
-  .num-cell .n-label{font-family:var(--mono); font-size:12.5px; color:var(--muted); margin-top:8px; letter-spacing:0.03em;}
-
-  /* ---------- CTA / waitlist ---------- */
-  .cta-section{
-    background:var(--paper); color:var(--ink); border-radius:3px; padding:60px 50px;
-    margin-top:0; position:relative; overflow:hidden;
-  }
-  @media (max-width:640px){ .cta-section{padding:40px 26px;} }
-  .cta-grid{display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:flex-start;}
-  @media (max-width:840px){ .cta-grid{grid-template-columns:1fr; gap:30px;} }
-  .cta-section h2{font-size:clamp(28px,4vw,42px); color:var(--ink); max-width:420px; margin-bottom:16px;}
-  .cta-section p{color:#565b62; font-size:15px; line-height:1.65; max-width:400px;}
-  form{display:flex; flex-direction:column; gap:14px;}
-  .field-row{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
-  @media (max-width:520px){ .field-row{grid-template-columns:1fr;} }
-  label{font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:#6a6f76; margin-bottom:6px; display:block;}
-  input, select{
-    width:100%; padding:12px 14px; border:1px solid #cfc6ab; border-radius:2px;
-    background:#fbf9f2; font-family:var(--body); font-size:14.5px; color:var(--ink);
-  }
-  input:focus, select:focus{outline:2px solid var(--orange); outline-offset:1px; border-color:var(--orange);}
-  .submit-btn{
-    margin-top:6px; font-family:var(--mono); font-weight:600; font-size:14px;
-    background:var(--ink); color:var(--paper); border:none; padding:15px 24px;
-    border-radius:2px; cursor:pointer; letter-spacing:0.02em; transition:background .15s;
-  }
-  .submit-btn:hover{background:var(--ink-soft);}
-  .form-note{font-family:var(--mono); font-size:11.5px; color:#8a8f96; margin-top:2px;}
-  .success-msg{
-    display:none; background:#e9f0e4; border:1px solid var(--green); color:#2f4d26;
-    padding:18px 20px; border-radius:2px; font-size:14px; line-height:1.6;
-  }
-  .success-msg b{font-family:var(--display); text-transform:uppercase; letter-spacing:0.02em;}
-
-  /* ---------- footer ---------- */
-  footer{border-top:1px solid var(--line); padding:44px 0; }
-  .footer-inner{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;}
-  footer .brand{font-size:17px;}
-  footer p{font-family:var(--mono); font-size:12px; color:var(--muted); max-width:460px; line-height:1.7;}
-
-  /* fade-in on scroll */
-  .reveal{opacity:0; transform:translateY(18px); transition:opacity .6s ease, transform .6s ease;}
-  .reveal.in{opacity:1; transform:translateY(0);}
 </style>
 </head>
 <body>
+<div class="wrap">
 
-<header>
-  <nav>
-    <div class="brand"><span class="dot"></span>Stocklist</div>
-    <div class="navlinks">
+  <nav class="site-nav">
+    <a class="brand" href="index.html">Stocklist</a>
+    <div class="links">
       <a href="catalogue.html">Order supplies</a>
       <a href="#industries">Who it's for</a>
       <a href="track.html">Track order</a>
       <a href="supplier-dashboard.html">Supplier dashboard</a>
-      <a href="login.html" id="nav-auth-link">Log in</a>
+      <a href="login.html">Log in</a>
     </div>
-    <a class="nav-cta" href="catalogue.html">Place an order</a>
+    <a class="btn btn-primary" href="catalogue.html">Place an order</a>
   </nav>
-</header>
 
-<section class="hero">
-  <div class="wrap">
-    <div class="manifest-tag">
-      <span>MANIFEST NO. <b>0417</b></span>
-      <span>ORIGIN <b>PRETORIA, ZA</b></span>
-      <span>STATUS <b style="color:var(--green)">RECURRING</b></span>
+  <div class="hero">
+    <div class="stamp-tag">
+      MANIFEST NO. <b>0417</b> &nbsp;·&nbsp; ORIGIN <b>PRETORIA, ZA</b> &nbsp;·&nbsp; STATUS <b>RECURRING</b>
     </div>
     <h1>Never place the <em>same order</em> twice.</h1>
-    <p class="hero-sub">Stocklist connects South African salons, guesthouses, restaurants, offices and building sites to local suppliers — so the toilet paper, soap and bin bags just keep arriving, on schedule, without another Tuesday spent restocking.</p>
-    <div class="hero-ctas">
-      <a class="btn-primary" href="catalogue.html">Place an order →</a>
-      <a class="btn-ghost" href="#how">See how it works</a>
+    <p class="lede">Stocklist connects South African salons, guesthouses, restaurants, offices and building sites to local suppliers — so the toilet paper, soap and bin bags just keep arriving, on schedule, without another Tuesday spent restocking.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="catalogue.html">Place an order →</a>
+      <a class="btn btn-secondary" href="#how">See how it works</a>
+    </div>
+    <div class="chips">
+      <span class="chip">Toilet paper</span><span class="chip">Hand soap</span><span class="chip">Cleaning chemicals</span>
+      <span class="chip">Bin liners</span><span class="chip">Paper towels</span><span class="chip">Laundry detergent</span>
+      <span class="chip">Shampoo &amp; amenities</span>
     </div>
   </div>
-  <div class="conveyor">
-    <div class="conveyor-track" id="conveyorTrack">
-      <span>Toilet paper</span><span>Hand soap</span><span>Cleaning chemicals</span><span>Bin liners</span><span>Paper towels</span><span>Laundry detergent</span><span>Shampoo & amenities</span>
-      <span>Toilet paper</span><span>Hand soap</span><span>Cleaning chemicals</span><span>Bin liners</span><span>Paper towels</span><span>Laundry detergent</span><span>Shampoo & amenities</span>
-    </div>
-  </div>
-</section>
 
-<section id="how">
-  <div class="wrap reveal">
+  <section id="how">
     <div class="eyebrow">How it works</div>
-    <h2 style="font-size:clamp(28px,4vw,44px); max-width:640px;">One order in. One supplier out. No warehouse in between.</h2>
-    <div class="flow-diagram">
-      <div class="flow-node">
-        <div class="fn-label">Step 01</div>
-        <div class="fn-title">Customer</div>
-        <div class="fn-sub">A salon, host or site places a recurring order in minutes.</div>
-      </div>
-      <div class="flow-line"></div>
-      <div class="flow-node accent">
-        <div class="fn-label">Step 02</div>
-        <div class="fn-title">Stocklist</div>
-        <div class="fn-sub">Routes the order, handles payment, takes a commission.</div>
-      </div>
-      <div class="flow-line"></div>
-      <div class="flow-node">
-        <div class="fn-label">Step 03</div>
-        <div class="fn-title">Local supplier</div>
-        <div class="fn-sub">Picks, packs and delivers from stock they already hold.</div>
-      </div>
-      <div class="flow-line"></div>
-      <div class="flow-node">
-        <div class="fn-label">Step 04</div>
-        <div class="fn-title">Customer</div>
-        <div class="fn-sub">Receives the delivery. Next order is already scheduled.</div>
-      </div>
+    <h2 class="section-title">One order in. One supplier out. No warehouse in between.</h2>
+    <div class="steps">
+      <div class="step"><div class="no">STEP 01 · CUSTOMER</div><h4>Place the order</h4><p>A salon, host or site places a recurring order in minutes.</p></div>
+      <div class="step"><div class="no">STEP 02 · STOCKLIST</div><h4>We route it</h4><p>Routes the order, handles payment, takes a commission.</p></div>
+      <div class="step"><div class="no">STEP 03 · SUPPLIER</div><h4>Local fulfilment</h4><p>Picks, packs and delivers from stock they already hold.</p></div>
+      <div class="step"><div class="no">STEP 04 · CUSTOMER</div><h4>It repeats itself</h4><p>Receives the delivery. Next order is already scheduled.</p></div>
     </div>
-    <p class="commission-note">No warehouse, no stockholding, no delivery fleet to start. Stocklist is the ordering layer — suppliers who already stock these goods fulfil through their own channels. <b>We earn a commission on every transaction</b>, so growth comes from repeat orders, not new inventory.</p>
-
-    <div class="numbers">
-      <div class="num-cell"><div class="n-val">10%</div><div class="n-label">TYPICAL PLATFORM COMMISSION</div></div>
-      <div class="num-cell"><div class="n-val">R10K</div><div class="n-label">REVENUE FROM 100 ORDERS AT R1,000</div></div>
-      <div class="num-cell"><div class="n-val">R100K</div><div class="n-label">REVENUE FROM 1,000 ORDERS AT R1,000</div></div>
+    <p style="max-width:640px;font-size:13.5px;color:var(--ink-soft);margin-top:24px;line-height:1.6;">No warehouse, no stockholding, no delivery fleet to start. Stocklist is the ordering layer — suppliers who already stock these goods fulfil through their own channels. We earn a commission on every transaction, so growth comes from repeat orders, not new inventory.</p>
+    <div class="commission-row">
+      <div class="commission-card"><div class="big">10%</div><div class="lbl">Typical platform commission</div></div>
+      <div class="commission-card"><div class="big">R10K</div><div class="lbl">Revenue from 100 orders at R1,000</div></div>
+      <div class="commission-card"><div class="big">R100K</div><div class="lbl">Revenue from 1,000 orders at R1,000</div></div>
     </div>
-  </div>
-</section>
+  </section>
 
-<section id="industries">
-  <div class="wrap reveal">
+  <section id="industries">
     <div class="eyebrow">Who it's for</div>
-    <h2 style="font-size:clamp(28px,4vw,44px); max-width:640px;">Every business that runs out of the same things, on repeat.</h2>
+    <h2 class="section-title">Every business that runs out of the same things, on repeat.</h2>
     <div class="industry-grid">
-      <div class="bin">
-        <div class="bin-sku">BIN / AIRBNB-01</div>
-        <h3>Airbnb & guesthouses</h3>
-        <ul><li>Toilet paper & tissues</li><li>Soap & shampoo minis</li><li>Laundry detergent</li><li>Bin bags</li></ul>
-      </div>
-      <div class="bin">
-        <div class="bin-sku">BIN / SALON-02</div>
-        <h3>Salons & barbers</h3>
-        <ul><li>Towels & capes</li><li>Disinfectant & sanitiser</li><li>Gloves & consumables</li><li>Paper towels</li></ul>
-      </div>
-      <div class="bin">
-        <div class="bin-sku">BIN / FOOD-03</div>
-        <h3>Restaurants & cafés</h3>
-        <ul><li>Cleaning chemicals</li><li>Dish soap & degreaser</li><li>Napkins & takeaway ware</li><li>Bin liners</li></ul>
-      </div>
-      <div class="bin">
-        <div class="bin-sku">BIN / OFFICE-04</div>
-        <h3>Offices</h3>
-        <ul><li>Toilet paper & soap</li><li>Coffee & tea supplies</li><li>Hand sanitiser</li><li>Cleaning supplies</li></ul>
-      </div>
-      <div class="bin">
-        <div class="bin-sku">BIN / SITE-05</div>
-        <h3>Construction sites</h3>
-        <ul><li>PPE consumables</li><li>Site toilet supplies</li><li>Cleaning chemicals</li><li>Bin bags</li></ul>
-      </div>
+      <div class="ind-card"><div class="tag">BIN / AIRBNB-01</div><h4>Airbnb &amp; guesthouses</h4><ul><li>Toilet paper &amp; tissues</li><li>Soap &amp; shampoo minis</li><li>Laundry detergent</li><li>Bin bags</li></ul></div>
+      <div class="ind-card"><div class="tag">BIN / SALON-02</div><h4>Salons &amp; barbers</h4><ul><li>Towels &amp; capes</li><li>Disinfectant &amp; sanitiser</li><li>Gloves &amp; consumables</li><li>Paper towels</li></ul></div>
+      <div class="ind-card"><div class="tag">BIN / FOOD-03</div><h4>Restaurants &amp; cafés</h4><ul><li>Cleaning chemicals</li><li>Dish soap &amp; degreaser</li><li>Napkins &amp; takeaway ware</li><li>Bin liners</li></ul></div>
+      <div class="ind-card"><div class="tag">BIN / OFFICE-04</div><h4>Offices</h4><ul><li>Toilet paper &amp; soap</li><li>Coffee &amp; tea supplies</li><li>Hand sanitiser</li><li>Cleaning supplies</li></ul></div>
+      <div class="ind-card"><div class="tag">BIN / SITE-05</div><h4>Construction sites</h4><ul><li>PPE consumables</li><li>Site toilet supplies</li><li>Cleaning chemicals</li><li>Bin bags</li></ul></div>
     </div>
-  </div>
-</section>
+  </section>
 
-<section id="manifest">
-  <div class="wrap reveal">
+  <section>
     <div class="eyebrow">Sample order</div>
-    <h2 style="font-size:clamp(28px,4vw,44px); max-width:640px;">What an Airbnb host's manifest looks like.</h2>
-    <div class="manifest-signature">
-      <div class="manifest-left">
-        <div class="stamp">Auto-reorders<br>every 12 days</div>
-        <div class="ml-eyebrow">Account: Riverside Guesthouse</div>
-        <h3>This order repeats itself.</h3>
-        <p>Set it up once. Stocklist tracks the cadence and re-sends the same list to the same supplier — no re-typing, no forgetting, no last-minute run to the shop.</p>
-      </div>
-      <div class="manifest-right">
-        <div class="m-row"><div class="m-left"><div class="m-check"></div><div class="m-name">Toilet paper, 2-ply</div></div><div class="m-qty">×4 packs</div></div>
-        <div class="m-row"><div class="m-left"><div class="m-check"></div><div class="m-name">Hand soap refill</div></div><div class="m-qty">×2 bottles</div></div>
-        <div class="m-row"><div class="m-left"><div class="m-check"></div><div class="m-name">Shampoo & conditioner minis</div></div><div class="m-qty">×24 units</div></div>
-        <div class="m-row"><div class="m-left"><div class="m-check"></div><div class="m-name">All-purpose cleaning chemical</div></div><div class="m-qty">×3 litres</div></div>
-        <div class="m-row"><div class="m-left"><div class="m-check"></div><div class="m-name">Bin bags, 50L</div></div><div class="m-qty">×1 roll</div></div>
-        <div class="m-row"><div class="m-left"><div class="m-check"></div><div class="m-name">Paper towels</div></div><div class="m-qty">×6 rolls</div></div>
-        <div class="m-row"><div class="m-left"><div class="m-check"></div><div class="m-name">Laundry detergent</div></div><div class="m-qty">×2 litres</div></div>
-        <div class="m-total"><span>Order total</span><b>R 640.00</b></div>
-      </div>
+    <h2 class="section-title">What an Airbnb host's manifest looks like.</h2>
+    <div class="manifest-card">
+      <div class="stamp-tag" style="margin-bottom:16px;">AUTO-REORDERS <b>EVERY 12 DAYS</b></div>
+      <div style="font-size:12.5px;color:var(--ink-soft);margin-bottom:16px;">Account: Riverside Guesthouse</div>
+      <h4 style="margin:0 0 4px;font-family:'Fraunces',serif;">This order repeats itself.</h4>
+      <p style="font-size:13px;color:var(--ink-soft);margin:0 0 18px;line-height:1.5;">Set it up once. Stocklist tracks the cadence and re-sends the same list to the same supplier — no re-typing, no forgetting, no last-minute run to the shop.</p>
+      <div class="manifest-line"><span>Toilet paper, 2-ply</span><span class="mono">×4 packs</span></div>
+      <div class="manifest-line"><span>Hand soap refill</span><span class="mono">×2 bottles</span></div>
+      <div class="manifest-line"><span>Shampoo &amp; conditioner minis</span><span class="mono">×24 units</span></div>
+      <div class="manifest-line"><span>All-purpose cleaning chemical</span><span class="mono">×3 litres</span></div>
+      <div class="manifest-line"><span>Bin bags, 50L</span><span class="mono">×1 roll</span></div>
+      <div class="manifest-line"><span>Paper towels</span><span class="mono">×6 rolls</span></div>
+      <div class="manifest-line"><span>Laundry detergent</span><span class="mono">×2 litres</span></div>
+      <div class="manifest-total"><span>Order total</span><span class="mono">R 640.00</span></div>
     </div>
-  </div>
-</section>
+  </section>
 
-<section id="join">
-  <div class="wrap reveal">
-    <div class="cta-section">
-      <div class="cta-grid">
-        <div>
-          <div class="eyebrow" style="color:var(--stamp-red);">Early access</div>
-          <h2>Be first in line when we launch in your area.</h2>
-          <p>Stocklist is starting small in South Africa and proving demand city by city. Tell us about your business and we'll reach out as soon as suppliers go live near you. No cost to join, no commitment.</p>
-          <p style="margin-top:18px; font-size:14px;">Already in Pretoria? <a href="signup.html" style="color:var(--orange); font-weight:600;">Create your account and order now →</a></p>
-        </div>
-        <div>
-          <form id="waitlistForm" action="https://formspree.io/f/xnpazzyg" method="POST">
-            <div class="field-row">
-              <div>
-                <label for="bizname">Business name</label>
-                <input id="bizname" name="business_name" type="text" placeholder="Riverside Guesthouse" required>
-              </div>
-              <div>
-                <label for="biztype">Business type</label>
-                <select id="biztype" name="business_type" required>
-                  <option value="" disabled selected>Select one</option>
-                  <option>Airbnb / guesthouse</option>
-                  <option>Salon / barber</option>
-                  <option>Restaurant / café</option>
-                  <option>Office</option>
-                  <option>Construction site</option>
-                  <option>Other</option>
-                </select>
-              </div>
-            </div>
-            <div class="field-row">
-              <div>
-                <label for="city">City</label>
-                <input id="city" name="city" type="text" placeholder="Pretoria" required>
-              </div>
-              <div>
-                <label for="contact">WhatsApp or email</label>
-                <input id="contact" name="contact" type="text" placeholder="082 000 0000" required>
-              </div>
-            </div>
-            <button type="submit" class="submit-btn" id="submitBtn">Join the waitlist →</button>
-            <p class="form-note" id="formNote">Your details go straight to us — nothing is shared with anyone else.</p>
-          </form>
-          <div class="success-msg" id="successMsg">
-            <b>You're on the list.</b><br>Thanks — we'll be in touch as soon as suppliers are live in your area.
-          </div>
-          <div class="success-msg" id="errorMsg" style="border-color:var(--stamp-red); background:#f3e4e1; color:#6b2119; display:none;">
-            <b>Something went wrong.</b><br>Please try again, or reach us directly via WhatsApp.
-          </div>
-        </div>
+  <section>
+    <div class="eyebrow">Early access</div>
+    <h2 class="section-title">Be first in line when we launch in your area.</h2>
+    <p style="max-width:560px;font-size:14px;color:var(--ink-soft);margin:-14px 0 26px;">Stocklist is starting small in South Africa and proving demand city by city. Tell us about your business and we'll reach out as soon as suppliers go live near you. No cost to join, no commitment.</p>
+    <p style="font-size:13.5px;margin-bottom:26px;">Already in Pretoria? <a href="signup.html" style="color:var(--slate);font-weight:600;">Create your account and order now →</a></p>
+    <div class="waitlist-card">
+      <div class="field"><label>Business name</label><input type="text" placeholder="e.g. Riverside Guesthouse"></div>
+      <div class="field"><label>Business type</label>
+        <select><option>Select one</option><option>Airbnb / guesthouse</option><option>Salon / barber</option><option>Restaurant / café</option><option>Office</option><option>Construction site</option><option>Other</option></select>
       </div>
+      <div class="field"><label>City</label><input type="text" placeholder="e.g. Pretoria"></div>
+      <div class="field"><label>WhatsApp or email</label><input type="text" placeholder="082 000 0000 or you@business.co.za"></div>
+      <button class="btn btn-primary" style="width:100%;">Join the waitlist →</button>
+      <p style="font-size:11.5px;color:var(--ink-soft);margin:14px 0 0;text-align:center;">Your details go straight to us — nothing is shared with anyone else.</p>
     </div>
-  </div>
-</section>
+  </section>
 
-<footer>
-  <div class="wrap footer-inner">
-    <div class="brand"><span class="dot"></span>Stocklist</div>
-    <p>Concept preview. Free for businesses to join — Stocklist earns a small commission from suppliers on each completed order.</p>
-  </div>
-</footer>
+  <footer>
+    <span>Stocklist</span>
+    <span>Concept preview. Free for businesses to join — Stocklist earns a small commission from suppliers on each completed order.</span>
+  </footer>
 
-<script>
-  // reveal on scroll
-  const revealEls = document.querySelectorAll('.reveal');
-  const io = new IntersectionObserver((entries)=>{
-    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
-  }, {threshold:0.12});
-  revealEls.forEach(el=>io.observe(el));
-
-  // waitlist form — submits to Formspree
-  const form = document.getElementById('waitlistForm');
-  const success = document.getElementById('successMsg');
-  const errorMsg = document.getElementById('errorMsg');
-  const submitBtn = document.getElementById('submitBtn');
-
-  form.addEventListener('submit', async function(e){
-    e.preventDefault();
-    errorMsg.style.display = 'none';
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Sending…';
-
-    try{
-      const response = await fetch(form.action, {
-        method: 'POST',
-        body: new FormData(form),
-        headers: { 'Accept': 'application/json' }
-      });
-
-      if(response.ok){
-        form.style.display = 'none';
-        success.style.display = 'block';
-      } else {
-        throw new Error('Submission failed');
-      }
-    } catch(err){
-      errorMsg.style.display = 'block';
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Join the waitlist →';
-    }
-  });
-
-  // reflect logged-in state in the nav, if a Stocklist account exists in this browser
-  try {
-    const session = JSON.parse(localStorage.getItem("sl_session") || "null");
-    const authLink = document.getElementById("nav-auth-link");
-    if (session && authLink) {
-      authLink.textContent = session.type === "supplier" ? "Supplier dashboard" : "Dashboard";
-      authLink.href = session.type === "supplier" ? "supplier-dashboard.html" : "dashboard.html";
-    }
-  } catch (e) {}
-</script>
-
+</div>
 </body>
 </html>

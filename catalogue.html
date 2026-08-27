@@ -4,161 +4,130 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Order supplies — Stocklist</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<div class="topbar">
-  <div class="wrap topbar-inner">
-    <a href="index.html" class="brand"><span class="dot"></span>Stocklist</a>
-    <div class="nav" id="topbar-nav"></div>
-  </div>
-</div>
-
-<div class="wrap page-head">
-  <div class="crumbs"><a href="index.html">Stocklist</a> / Order supplies</div>
-  <h1>Pick a supplier, build the order.</h1>
-  <p>Every order routes to one local supplier at a time — that keeps delivery simple and the invoice single-source.</p>
-</div>
-
 <div class="wrap">
-  <section>
-    <div class="field-row" style="margin-bottom:26px;">
-      <div class="field" style="margin-bottom:0;">
-        <label for="filter-category">Filter by business type</label>
-        <select id="filter-category">
-          <option value="">All categories</option>
-          <option>Airbnb / guesthouse</option>
-          <option>Salon / barber</option>
-          <option>Restaurant / café</option>
-          <option>Office</option>
-          <option>Construction site</option>
-        </select>
-      </div>
-      <div class="field" style="margin-bottom:0;">
-        <label for="filter-city">City</label>
-        <input id="filter-city" placeholder="Pretoria">
-      </div>
+
+  <div class="topbar">
+    <div>
+      <a class="brand" href="index.html">Stocklist</a>
+      <div class="crumb" style="margin-top:6px;">Stocklist / <b>Order supplies</b></div>
     </div>
-
-    <div id="supplier-list" class="stack" style="gap:16px;"></div>
-    <div class="empty-state" id="empty-state" style="display:none;">
-      <span class="stencil">No suppliers found</span>
-      Try clearing the filters — we're onboarding suppliers city by city.
-    </div>
-  </section>
-</div>
-
-<a href="checkout.html" class="cart-fab" id="cart-fab" style="display:none;">
-  Order basket <span class="cart-count" id="cart-count">0</span>
-</a>
-
-<footer>
-  <div class="wrap">
-    <span class="stencil">Stocklist</span>
-    <p class="muted" style="margin:0; font-size:.85rem;">Prices shown are supplier list prices. Stocklist's 10% commission is included in the supplier's price, not added on top.</p>
+    <a class="btn btn-secondary" href="dashboard.html">← Back to dashboard</a>
   </div>
-</footer>
 
-<script src="assets/db.js"></script>
-<script src="assets/nav.js"></script>
-<script>
-  const listEl = document.getElementById("supplier-list");
-  const emptyEl = document.getElementById("empty-state");
-  const catFilter = document.getElementById("filter-category");
-  const cityFilter = document.getElementById("filter-city");
-  const cartFab = document.getElementById("cart-fab");
-  const cartCountEl = document.getElementById("cart-count");
+  <h1 style="font-weight:600;font-size:30px;margin:0 0 6px;">Pick a supplier, build the order.</h1>
+  <p style="color:var(--ink-soft);font-size:14.5px;margin:0 0 26px;">Every order routes to one local supplier at a time — that keeps delivery simple and the invoice single-source.</p>
 
-  function refreshCartFab() {
-    const count = StocklistDB.cartCount();
-    cartFab.style.display = count > 0 ? "flex" : "none";
-    cartCountEl.textContent = count;
-  }
+  <div class="cat-layout">
 
-  function renderSuppliers() {
-    const suppliers = StocklistDB.listSuppliers({
-      city: cityFilter.value.trim() || undefined,
-      category: catFilter.value || undefined,
-    });
-    listEl.innerHTML = "";
-    emptyEl.style.display = suppliers.length === 0 ? "block" : "none";
+    <!-- FILTERS -->
+    <div>
+      <div class="filter-group">
+        <div class="flabel">Business type</div>
+        <label class="filter-opt"><input type="checkbox" checked> All categories</label>
+        <label class="filter-opt"><input type="checkbox"> Airbnb / guesthouse</label>
+        <label class="filter-opt"><input type="checkbox"> Salon / barber</label>
+        <label class="filter-opt"><input type="checkbox"> Restaurant / café</label>
+        <label class="filter-opt"><input type="checkbox"> Office</label>
+        <label class="filter-opt"><input type="checkbox"> Construction site</label>
+      </div>
+      <div class="filter-group">
+        <div class="flabel">City</div>
+        <label class="filter-opt"><input type="radio" name="city" checked> All cities</label>
+        <label class="filter-opt"><input type="radio" name="city"> Pretoria</label>
+        <label class="filter-opt"><input type="radio" name="city"> Johannesburg</label>
+        <label class="filter-opt"><input type="radio" name="city"> Cape Town</label>
+      </div>
+      <div class="filter-group">
+        <div class="flabel">Sort by</div>
+        <label class="filter-opt"><input type="radio" name="sort" checked> Recommended</label>
+        <label class="filter-opt"><input type="radio" name="sort"> Price: low to high</label>
+        <label class="filter-opt"><input type="radio" name="sort"> Fastest delivery</label>
+      </div>
+    </div>
 
-    suppliers.forEach((sup) => {
-      const products = StocklistDB.listProducts(sup.id);
-      const card = document.createElement("div");
-      card.className = "supplier-card";
-      card.innerHTML = `
-        <div class="sc-head">
-          <div>
-            <div style="font-family:var(--font-display); font-size:1.15rem; font-weight:700;">${sup.name}${sup.isDemo ? ' <span class="badge" style="margin-left:6px;">Demo account</span>' : ''}</div>
-            <span class="stencil dim">${sup.city.toUpperCase()} · ${sup.categories.join(" / ").toUpperCase()}</span>
+    <!-- SUPPLIER RESULTS -->
+    <div>
+      <div class="search-box">
+        <span>🔍</span>
+        <input type="text" placeholder="Search products, suppliers, categories…">
+      </div>
+
+      <div class="supplier-grid">
+        <div class="supplier-card">
+          <div class="top">
+            <div><h4>Clean Supply Co.</h4><div class="loc">Pretoria East · 4.8★ · 62 orders fulfilled</div></div>
+            <span class="badge-cat">Guesthouse</span>
           </div>
-          <span class="badge b-amber">${sup.rating ? "★ " + sup.rating : "NEW SUPPLIER"}</span>
+          <div class="items">Toilet paper, hand soap refill, laundry detergent, all-purpose cleaner</div>
+          <div class="foot"><span class="mono" style="font-weight:600;">From R160</span><button class="add-btn">Add to order</button></div>
         </div>
-        <div class="sc-body">${products.length ? products.map((p) => productRow(sup.id, p)).join("") : '<p class="muted" style="font-size:.85rem; padding:10px 0;">This supplier hasn\'t listed any products yet.</p>'}</div>
-      `;
-      listEl.appendChild(card);
-    });
 
-    // wire up steppers
-    listEl.querySelectorAll("[data-add]").forEach((btn) => {
-      btn.addEventListener("click", () => handleQty(btn.dataset.supplier, btn.dataset.product, 1));
-    });
-    listEl.querySelectorAll("[data-sub]").forEach((btn) => {
-      btn.addEventListener("click", () => handleQty(btn.dataset.supplier, btn.dataset.product, -1));
-    });
-  }
-
-  function productRow(supplierId, p) {
-    const cart = StocklistDB.getCart();
-    const qty = cart.items[p.id] || 0;
-    return `
-      <div class="product-row">
-        <div>
-          <div class="p-name">${p.name}</div>
-          <div class="p-unit">${p.unit} · R${p.price.toFixed(2)}</div>
+        <div class="supplier-card">
+          <div class="top">
+            <div><h4>SudsPro Chemicals</h4><div class="loc">Centurion · 4.6★ · 118 orders fulfilled</div></div>
+            <span class="badge-cat">Restaurant</span>
+          </div>
+          <div class="items">Dish soap, degreaser, sanitiser, floor cleaning chemicals</div>
+          <div class="foot"><span class="mono" style="font-weight:600;">From R95</span><button class="add-btn">Add to order</button></div>
         </div>
-        <div class="qty-stepper">
-          <button data-sub data-supplier="${supplierId}" data-product="${p.id}" aria-label="Remove one">−</button>
-          <span id="qty-${p.id}">${qty}</span>
-          <button data-add data-supplier="${supplierId}" data-product="${p.id}" aria-label="Add one">+</button>
+
+        <div class="supplier-card">
+          <div class="top">
+            <div><h4>PackRight Supplies</h4><div class="loc">Pretoria North · 4.9★ · 41 orders fulfilled</div></div>
+            <span class="badge-cat">Office</span>
+          </div>
+          <div class="items">Bin liners, paper towels, napkins, takeaway packaging</div>
+          <div class="foot"><span class="mono" style="font-weight:600;">From R70</span><button class="add-btn">Add to order</button></div>
+        </div>
+
+        <div class="supplier-card">
+          <div class="top">
+            <div><h4>GuestStock SA</h4><div class="loc">Pretoria Central · 4.7★ · 29 orders fulfilled</div></div>
+            <span class="badge-cat">Guesthouse</span>
+          </div>
+          <div class="items">Shampoo &amp; conditioner minis, soap bars, towels, capes</div>
+          <div class="foot"><span class="mono" style="font-weight:600;">From R210</span><button class="add-btn">Add to order</button></div>
+        </div>
+
+        <div class="supplier-card">
+          <div class="top">
+            <div><h4>SitePro PPE &amp; Supplies</h4><div class="loc">Midrand · 4.5★ · 17 orders fulfilled</div></div>
+            <span class="badge-cat">Construction</span>
+          </div>
+          <div class="items">Gloves, site toilet supplies, cleaning chemicals, bin bags</div>
+          <div class="foot"><span class="mono" style="font-weight:600;">From R340</span><button class="add-btn">Add to order</button></div>
+        </div>
+
+        <div class="empty-state">
+          <div class="ic">📍</div>
+          More suppliers are onboarding in your area — check back soon, or join the waitlist from the homepage.
         </div>
       </div>
-    `;
-  }
+    </div>
 
-  function handleQty(supplierId, productId, delta) {
-    try {
-      const cart = StocklistDB.getCart();
-      const current = cart.items[productId] || 0;
-      const next = Math.max(0, current + delta);
-      if (next > 0) {
-        StocklistDB.addToCart(supplierId, productId, delta);
-      } else {
-        StocklistDB.setCartQty(productId, 0);
-      }
-      document.getElementById("qty-" + productId).textContent = StocklistDB.getCart().items[productId] || 0;
-      refreshCartFab();
-    } catch (err) {
-      if (err.message === "SUPPLIER_MISMATCH") {
-        if (confirm("Your basket already has items from another supplier. Start a new basket with this supplier instead?")) {
-          StocklistDB.clearCart();
-          StocklistDB.addToCart(supplierId, productId, delta);
-          renderSuppliers();
-          refreshCartFab();
-        }
-      }
-    }
-  }
+    <!-- BASKET -->
+    <div class="basket">
+      <div class="card">
+        <div class="card-head"><h3>Order basket</h3><span class="mono" style="font-size:12px;color:var(--ink-soft);">2 items</span></div>
+        <div class="basket-line"><span>Toilet paper, 2-ply ×4</span><span class="mono">R160</span></div>
+        <div class="basket-line"><span>Hand soap refill ×2</span><span class="mono">R90</span></div>
+        <div class="basket-total"><span>Total</span><span class="mono">R250</span></div>
+        <p style="font-size:11.5px;color:var(--ink-soft);margin:10px 0 16px;">Stocklist's 10% commission is included in the supplier's price, not added on top.</p>
+        <a href="checkout.html" class="btn btn-primary" style="display:block;text-align:center;">Go to checkout →</a>
+        <label class="filter-opt" style="margin-top:12px;"><input type="checkbox"> Make this a recurring order</label>
+      </div>
+    </div>
 
-  catFilter.addEventListener("change", renderSuppliers);
-  cityFilter.addEventListener("input", renderSuppliers);
+  </div>
 
-  renderSuppliers();
-  refreshCartFab();
-</script>
+  <footer>
+    <span>Stocklist · Concept preview</span>
+    <span>Prices shown are supplier list prices</span>
+  </footer>
+
+</div>
 </body>
 </html>
